@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using Blazored.Toast.Configuration
+
+@inherits LayoutComponentBase
+
+<Spinner></Spinner>
+
+<BlazoredToasts Position="ToastPosition.BottomLeft"
+                Timeout="4"
+                IconType="IconType.FontAwesome"
+                SuccessClass="success-toast-override"
+                SuccessIcon="fas fa-check"
+                ErrorIcon="fas fa-exclamation"/>
+
+<TopNavigation />
+
+<div class="mt-3 mb-5 px-4">
+    @Body
+</div>

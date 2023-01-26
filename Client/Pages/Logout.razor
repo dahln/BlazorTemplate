@@ -1,0 +1,14 @@
+@page "/logout"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Configuration
+
+@inject NavigationManager Navigation
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        await sessionStorage.ClearAsync();
+        Navigation.NavigateTo("/", true);
+    }
+}

@@ -1,0 +1,23 @@
+﻿.navbar-brand {
+    letter-spacing: 1px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    font-weight: 100;
+    color: white !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+
+    font-weight: 100 !important;
+}
+
+.search-icon {
+    color: orangered;
+}
+
+.user-icon {
+    color: steelblue;
+}
+
+.BlazorDemoCRUD-logo {
+    color: mediumslateblue;
+}

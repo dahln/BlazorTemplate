@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject NavigationManager Navigation
+@inject Common.Configuration Configuration
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            @* <img src="default-cropped.svg" class="navbar-brand-logo me-2" /> *@
+            <i class="fas fa-ghost BlazorDemoCRUD-logo me-3"></i>BlazorDemoCRUD
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+                aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarScroll">
+            <ul class="navbar-nav ms-md-auto my-2 my-lg-0">
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <a class="nav-link me-2" href="@($"customers")"><i class="fas fa-search search-icon me-2"></i>Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link me-2" href="account"><i class="fas fa-cog user-icon me-2"></i>@context.User.Identity.Name</a>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link btn btn-link" @onclick="BeginSignOut"><i class="fas fa-sign-out-alt signout-icon me-1"></i>Log out</button>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <a class="nav-link me-2" href="authentication/login">Register | Sign In</a>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+@code{
+    protected override void OnInitialized()
+    {
+    }
+
+    private void BeginSignOut(MouseEventArgs args)
+    {
+        var authority = Configuration.Authority;
+        var clientId = Configuration.ClientId;
+
+        Navigation.NavigateTo($"{authority}/v2/logout?client_id={clientId}&returnTo={Navigation.BaseUri}logout");
+    }
+}
