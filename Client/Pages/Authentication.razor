@@ -22,7 +22,15 @@
         @* Left these empty - at this time I don't want messages *@
     </Registering>
     <LogOutSucceeded>
-        @* Left these empty - at this time I don't want messages *@
+        <AuthorizeView>
+            <NotAuthorized>
+                <div class="row">
+                    <div class="col-lg-4 mx-auto text-center">
+                        <h4>You have successfully signed out</h4>
+                    </div>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
     </LogOutSucceeded>
     <LogInFailed>
         <div class="row mt-5">
@@ -31,9 +39,6 @@
             </div>
         </div>
     </LogInFailed>
-    <LogOut>
-        @* Left these empty - at this time I don't want messages *@
-    </LogOut>
 </RemoteAuthenticatorView>
 
 @code{

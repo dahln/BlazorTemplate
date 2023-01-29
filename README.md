@@ -1,12 +1,14 @@
-[![CI/CD Azure App Service](https://github.com/shadowlings/BlazorDemoCRUD/actions/workflows/main_blazordemocrud.yml/badge.svg)](https://github.com/shadowlings/BlazorDemoCRUD/actions/workflows/main_blazordemocrud.yml)
+# BlazorDemoCRUD : A .NET Web App Demo
 
-![BlazorDemoCRUD](https://repository-images.githubusercontent.com/593055304/693d4e94-295c-46bf-8473-c4baac737078)
+In Progress: I'm currently exploring the pros/cons of Azure B2C vs Auth0.
 
 ## Demo
-https://demo.shadowlings.com/
+https://BlazorDemoCRUD.azurewebsites.net
+
+This demo app may be deleted and recreated from time to time. This is because I want to experiment with different ways to create and deploy Azure resources.
 
 ## What & Why
-This project is a example one way to build a .NET Web application, using Blazor, Web API, and SQL. Demonstrating simple CRUD & Search operations, protected by Authentication/Authorization. This is an active application that I continue update as .NET is updated and expanded. In some scenerios, this application could be used as a template for starting new projects.
+This project is a demo one way to build a .NET Web application, using Blazor, Web API, and SQL. Demonstrating simple CRUD & Search operations, protected by Authentication/Authorization. This is an active application that I continue update as .NET is updated and expanded. In some scenerios, this application could be used as a template for starting new projects.
 
 ## Technologies
  - .NET 7
@@ -22,41 +24,39 @@ This project is a example one way to build a .NET Web application, using Blazor,
 
 ## Getting Started
 Getting started with this project is easy.
-1. You will need a MSSQL Database. I recommend an Azure SQL DB. [These instructions from Microsoft outline how to create an Azure SQL DB - adjust the billing/tier to your specific billing needs](https://docs.microsoft.com/en-us/azure/azure-sql/database/single-database-create-quickstart). After the database is created, copy the connection string into the Server/appsettings.json, in the "ConnectionStrings.DefaultConnection" property.
-2. Setup Auth0 - see details below.
+1. You will need a MSSQL Database. I recommend an Azure SQL DB. [These instructions from Microsoft outline how to create an Azure SQL DB - adjust the billing/tio your specific billing needs](https://docs.microsoft.com/en-us/azure/azure-sql/database/single-database-create-quickstart). After the database is created, copy the connection string into the Server/appsettings.json, in the "ConnectionStrings.DefaultConnection" property.
+2. Setup Azure AD B2C for authentication - see details below.
 
-## Why Auth0?
-I have used a lot of different Authentication/Authorization methods. In my opinion, Auth0 offers a simple, clean, easy-to-use Authentication service. They are reputable, and affordable - the free tier meets my needs most of the time. An alternative to Auth0 would be Azure Active Directory B2C; a good product, but I felt like it was a bit complicated. This articles from Auth0 outlines how to setup Auth0 with a Blazor WASM app: [Follow these instructions from Auth0](https://auth0.com/blog/securing-blazor-webassembly-apps/#Registering-the-Blazor-WASM-App-with-Auth0)
+## Setup Azure AD B2C
+These articles are helpful in setting up Azure B2C. Copy the necessary values from the server and client apps. I hope to include more detailed instructions later.
+1. [Azure B2C & Blazor WASM Hosted](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/webassembly/hosted-with-azure-active-directory-b2c?view=aspnetcore-6.0)
+2. [Helpful Blog on Azure B2C Setup](https://code-maze.com/azure-active-directory-b2c-with-blazor-webassembly-hosted-apps/)
+3. [Using Microsoft Graph to allow users to Self-Manage](https://learn.microsoft.com/en-us/azure/active-directory-b2c/microsoft-graph-operations)
+4. [Add User Administrator role to Application](https://learn.microsoft.com/en-us/azure/active-directory-b2c/microsoft-graph-get-started?tabs=app-reg-ga#optional-grant-user-administrator-role)
 
-## Specific Instructions for Auth0 Setup
-1. Create a new tenant
-2. Delete the Generic "Default App"
-3. Create a new Auth0 application, select "Single Page Web Applications". In the new client, find the 'Allowed Callback URLs, and enter "https://{YOURDOMAIN}/authentication/login-callback". Then find 'Allowed Logout URL' and enter "https://{YOURDOMAIN}". Replace "YOURDOMAIN" with your specific domain.
-4. From the new client app, copy the "Domain" value and past it into Client AppSettings.json, prepending "https://", so that the Authority field in the appsettings reads: "Authority":"https://BlazorDemoCRUD.us.auth0.com"
-5. From the new client app, copy the ClientId into the Server AppSettings.Json => AppClientId 
-6. In the Server AppSettings.json, in the Audience field, enter the API Url. In the case of the demo app, the Audience is "https://BlazorDemoCRUD.dahln.com"
-6. Create another Auth0 application, but this on will be under the "API" section. Provide a name, and identifier.
-7. Open the Auth0 Management API - System API app (this is not that application you just created). Go to the Machine to Machine applications tab. Select the API application and "Authorize" it. Under the permissions section select "create:client_grants","update:users","delete:users", and "read:users". Click update to apply the changes.
-8. Go to the Applications section, and open the Machine to Machine app. Copy the Client Id to the Server AppSettings.json file. Also copy the Client Secret to the AppSettings.json file.
-9. Copy the Authority URL into the other fields, but with a few variations, the end result should look similar to this:
-
-## Auth0 Logout Issue
-Note: As of right this writing (1/3/2023), there are appears to be a bug in (either in the library from Auth0 or Blazor Authetication/Authorization) where logout is sometimes not successful on the first attempt. This behaviour has been noted by other developers who have also created Blazor WASM apps using Auth0. The logout issue I have observed has been reported: [GitHub 40046](https://github.com/dotnet/aspnetcore/issues/40046). [This article for Auth0](https://auth0.com/blog/securing-blazor-webassembly-apps/) outlines how to secure a Blazor WASM app using Auth0. The article recognizes an issue with logout. As I implemented authentication/authorization in the application, I also had issues with logouts.  The issue appears to be an issue with Navigation.NavigateToLogout(...) creating a race condition during logouts. My solution was to NOT use that method. Instead, I created a new logout component. I had issus with the "RemoteAuthenticatorView" component - my own component worked well. The TopNavigation component (which has the logout button) calls the Auth0 logout URL, with a returnTo call back of "{BaseURL}/logout". The logout component will clear the session storage, which effectivly ends the session. The logout component then redirects the user back the root page and forces a page/app reload. This solution has worked well in my testing. It hope that Microsoft and/or Auth0 will find solutions to this issue so that I can use a 'stock' logout process.
-
-I should note the Azure B2C does not have the same logout issue that Auth0 has. But I don't know why.
 
 #### Server AppSettings.json
 ```
-"Auth0": {
-    "Audience": "https://BlazorDemoCRUD.dahln.com",
-    "Domain": "BlazorDemoCRUD.us.auth0.com",
-    "Authority": "https://BlazorDemoCRUD.us.auth0.com",
-    "ManagementAPI": "https://BlazorDemoCRUD.us.auth0.com/api/v2/",
-    "TokenAPI": "https://BlazorDemoCRUD.us.auth0.com/oauth/token",
-    "AppClientId": "SINGLE-PAGE-APP-CLIENTID",
-    "ClientId": "MACHINE-TO-MACHINE-ID-SHOULD-REPLACE-THIS",
-    "Secret": "MACHINE-TO-MACHINE-SECRET-SHOULD-REPLACE-THIS"
-} 
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "",
+  },
+  "AllowedHosts": "",
+  "AzureAdB2C": {
+    "Instance": "",
+    "ClientId": "",
+    "Domain": "",
+    "SignUpSignInPolicyId": "",
+    "TenantId": "",
+    "Secret": ""
+  },
+  "AzureAdB2CClient": {
+    "Authority": "",
+    "ClientId": "",
+    "DefaultAccessTokenScopes": "",
+    "ValidateAuthority": false
+  }
+}
 ```
 
 
@@ -97,7 +97,7 @@ Sensative configuration data, such as the DB connection strings, are kept in the
 ## Setup CI/CD
 Most applications need to be build and deployed. Outlined here are steps to setup automatted build and deployments (CI/CD)
 1. [Microsoft outlines how to use Azure App Service Deployment Center to setup CI/CD with GitHub Actions](https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#use-the-deployment-center). 
-2. This project is a ["Hosted Blazor"](https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-6.0#hosted-deployment-with-aspnet-core) application. When I deployed this application, I found that it wouldn't startup automatically. The default yaml workflow file, created by Azure, builds and publishes all projects in the solution. The consequence of this is that multiple .runtimeconfig files are created. Specifying that the build and publish should build the 'Server' project solves this issue. As a result, no special startup commands are necessary.
+2. Make sure that the CI/CD config yaml file builds the Server project. Not specifying the Server project will build all projects and cause startup conflicts.
 
 ## Licensing
 This project uses the 'Unlicense'.  It is a simple license - review it at your own leisure.
@@ -107,3 +107,7 @@ This project uses the 'Unlicense'.  It is a simple license - review it at your o
 2. [Namecheap Logo Maker](https://www.namecheap.com/logo-maker/)
 3. [SSLS](https://www.ssls.com/)
 4. [SVG Crop](https://svgcrop.com/)
+5. [Azure B2C & Blazor WASM Hosted](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/webassembly/hosted-with-azure-active-directory-b2c?view=aspnetcore-6.0)
+6. [Helpful Blog on Azure B2C Setup](https://code-maze.com/azure-active-directory-b2c-with-blazor-webassembly-hosted-apps/)
+7. [Using Microsoft Graph to allow users to Self-Manage](https://learn.microsoft.com/en-us/azure/active-directory-b2c/microsoft-graph-operations)
+8. [Add User Administrator role to Application](https://learn.microsoft.com/en-us/azure/active-directory-b2c/microsoft-graph-get-started?tabs=app-reg-ga#optional-grant-user-administrator-role)

@@ -3,20 +3,19 @@ using BlazorDemoCRUD.Data;
 using BlazorDemoCRUD.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, c =>
-    {
-        c.Authority = $"https://{builder.Configuration.GetSection("Auth0").GetValue<string>("Domain")}";
-        c.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-        {
-            ValidAudience = builder.Configuration.GetSection("Auth0").GetValue<string>("Audience"),
-            ValidIssuer = builder.Configuration.GetSection("Auth0").GetValue<string>("Domain")
-        };
-    });
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAdB2C"));
 builder.Services.AddAuthorization();
+builder.Services.Configure<JwtBearerOptions>(
+    JwtBearerDefaults.AuthenticationScheme, options =>
+    {
+        options.TokenValidationParameters.NameClaimType = "name";
+    });
+
 
 builder.Services.AddDbContext<DBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -57,12 +56,12 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

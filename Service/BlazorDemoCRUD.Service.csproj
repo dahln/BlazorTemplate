@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Auth0.ManagementApi" Version="7.17.4" />
+    <ProjectReference Include="..\Data\BlazorDemoCRUD.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\BlazorDemoCRUD.Data.csproj" />
+    <PackageReference Include="Microsoft.Graph" Version="4.49.0" />
   </ItemGroup>
 
 </Project>

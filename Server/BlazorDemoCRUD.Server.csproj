@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.25.10" />
   </ItemGroup>
 
 

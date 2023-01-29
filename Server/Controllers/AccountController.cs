@@ -16,13 +16,13 @@ namespace BlazorDemoCRUD.Server.Controllers
         }
 
         [HttpPost]
-        [Route("api/v1/account/email")]
+        [Route("api/v1/account/name")]
         [Authorize]
-        async public Task<IActionResult> ChangeAccountEmail([FromBody] Common.ChangeEmail model)
+        async public Task<IActionResult> ChangeName([FromBody] Common.ChangeName model)
         {
             string userId = User.GetUserId();
 
-            var result = await _accountService.ChangeAccountEmail(userId, model);
+            var result = await _accountService.ChangeName(userId, model);
 
             if (result.Success == false)
                 return BadRequest(result.Message);

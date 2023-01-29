@@ -10,7 +10,6 @@
 @inject IModalService _modalService
 @inject IToastService _toastService
 @inject SpinnerService _spinnerService
-@inject Common.Configuration Configuration
 
 @attribute [Authorize]
 
@@ -26,34 +25,40 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-lg-12">
-                        <h5>Change Email</h5>
+                        <h5>Change Name</h5>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <label>Current Email: @context.User.Identity.Name</label>
+                        <label>Current Name: @context.User.Identity.Name</label>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-lg-12">
-                        <input type="text" class="form-control" @bind="NewEmail" />
+                        <form autocomplete="off">
+                            @* Wrap this in a form to get autocomplete off to work. It didn't work on a single field basis.  *@
+                            <input type="text" class="form-control" @bind="NewName" placeholder="New Name" />
+                        </form>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-lg-12">
-                        <input type="button" class="btn btn-primary float-end " value="Save Email" @onclick="ChangeEmail" />
+                        <input type="button" class="btn btn-primary float-end " value="Save Name" @onclick="ChangeName" />
                     </div>
                 </div>
-
                 <div class="row mt-3">
                     <div class="col-lg-12">
                         <h5>Change Password</h5>
-                        <input type="password" class="form-control" @bind="NewPassword" placeholder="New Password" />
+                        <form autocomplete="off">
+                            <input type="password" class="form-control" @bind="NewPassword" placeholder="New Password" />
+                        </form>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-lg-12">
-                        <input type="password" class="form-control" @bind="ConfirmPassword" placeholder="Confirm Password"/>
+                        <form autocomplete="off">
+                            <input type="password" class="form-control" @bind="ConfirmPassword" placeholder="Confirm Password" />
+                        </form>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -82,23 +87,23 @@
 
 @code {
 
-    public string NewEmail { get; set; }
+    public string NewName { get; set; } = "";
     public string NewPassword { get; set; }
     public string ConfirmPassword { get; set; }
 
-    async public Task ChangeEmail()
+    async public Task ChangeName()
     {
-        var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to change your email");
+        var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to change your name.");
         var modalResult = await modal.Result;
 
         if (modalResult.Cancelled) { }
         else
         {
-            Common.ChangeEmail content = new Common.ChangeEmail() { NewEmail = NewEmail };
-            var response = await API.AccountChangeEmail(content);
+            Common.ChangeName content = new Common.ChangeName() { NewName = NewName };
+            var response = await API.AccountChangeName(content);
             if(response)
             {
-                _toastService.ShowSuccess("Done. Sign in with the new email");
+                _toastService.ShowSuccess("Done. Name has been updated.");
             }
         }
     }
@@ -130,10 +135,7 @@
         {
             await API.AccountDeleteUser();
 
-            var authority = Configuration.Authority;
-            var clientId = Configuration.ClientId;
-
-            Navigation.NavigateTo($"{authority}/v2/logout?client_id={clientId}&returnTo={Navigation.BaseUri}logout");
+            Navigation.NavigateToLogout("authentication/logout");
         }
     }
 

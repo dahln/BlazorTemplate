@@ -27,13 +27,14 @@ namespace BlazorDemoCRUD.Server.Controllers
 
         [HttpGet]
         [Route("api/v1/configuration")]
-        async public Task<IActionResult> GetClientConfiguration()
+        public IActionResult GetClientConfiguration()
         {
             Common.Configuration response = new Common.Configuration()
             {
-                ClientId = _configuration.GetSection("Auth0").GetValue<string>("AppClientId"),
-                Audience = _configuration.GetSection("Auth0").GetValue<string>("Audience"),
-                Authority = _configuration.GetSection("Auth0").GetValue<string>("Authority")
+                ClientId = _configuration.GetSection("AzureAdB2CClient").GetValue<string>("ClientId"),
+                Authority = _configuration.GetSection("AzureAdB2CClient").GetValue<string>("Authority"),
+                ValidateAuthority = _configuration.GetSection("AzureAdB2CClient").GetValue<bool>("ValidateAuthority"),
+                DefaultAccessTokenScopes =  _configuration.GetSection("AzureAdB2CClient").GetValue<string>("DefaultAccessTokenScopes"),
             };
             return Ok(response);
         }

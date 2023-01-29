@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace BlazorDemoCRUD.Common
 {
+    public class ChangeName
+    {
+        public string NewName { get; set; }
+    }
+    
     public class ChangeEmail
     {
         public string NewEmail { get; set; }

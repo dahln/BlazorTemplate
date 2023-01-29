@@ -27,9 +27,9 @@ namespace BlazorDemoCRUD.Client.Services
 
 
         #region Account Management
-        async public Task<bool> AccountChangeEmail(ChangeEmail content)
+        async public Task<bool> AccountChangeName(ChangeName content)
         {
-            var response = await PostAsync<bool>($"api/v1/account/email", content);
+            var response = await PostAsync<bool>($"api/v1/account/name", content);
             return response;
         }
         async public Task<bool> AccountChangePassword(ChangePassword content)

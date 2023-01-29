@@ -1,9 +1,8 @@
-﻿using Auth0.ManagementApi;
-using Auth0.ManagementApi.Models;
+﻿using Azure.Identity;
 using BlazorDemoCRUD.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+using Microsoft.Graph;
 
 namespace BlazorDemoCRUD.Service
 {
@@ -18,46 +17,40 @@ namespace BlazorDemoCRUD.Service
             _dbContext = dBContext;
         }
 
-        async private Task<Auth0TokenResponse> GetAuth0Token()
+        public GraphServiceClient GetGraphClient()
         {
-            var client = new HttpClient();// "https_//dev-e-8hqzx5.us.auth0.com/oauth/token");
+            var tenantId = _configuration.GetSection("AzureAdB2C").GetValue<string>("TenantId");
+            var clientId = _configuration.GetSection("AzureAdB2C").GetValue<string>("ClientId");
+            var secret = _configuration.GetSection("AzureAdB2C").GetValue<string>("Secret");
 
-            var parameters = new List<KeyValuePair<string, string>>();
-            parameters.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
-            parameters.Add(new KeyValuePair<string, string>("client_id", _configuration.GetSection("Auth0").GetValue<string>("ClientId")));
-            parameters.Add(new KeyValuePair<string, string>("client_secret", _configuration.GetSection("Auth0").GetValue<string>("Secret")));
-            parameters.Add(new KeyValuePair<string, string>("audience", _configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
-            var req = new HttpRequestMessage(HttpMethod.Post, _configuration.GetSection("Auth0").GetValue<string>("TokenAPI")) { Content = new FormUrlEncodedContent(parameters) };
-            var res = await client.SendAsync(req);
+            var scopes = new[] { "https://graph.microsoft.com/.default" };
+            var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, secret);
+            var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
 
-            var response = await res.Content.ReadAsStringAsync();
-            var data = JsonConvert.DeserializeObject<Auth0TokenResponse>(response);
-
-            return data;
+            return graphClient;
         }
 
-        async public Task<ServiceResponse> ChangeAccountEmail(string userId, Common.ChangeEmail model)
+        async public Task<ServiceResponse> ChangeName(string userId, Common.ChangeName model)
         {
             ServiceResponse response = new ServiceResponse();
+            
+            var graphClient = GetGraphClient();
 
-            var tokenData = await GetAuth0Token();
-
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
-
-            UserUpdateRequest request = new UserUpdateRequest()
+            var user = new User
             {
-                Email = model.NewEmail,
-                FullName = model.NewEmail
+                DisplayName = model.NewName,
             };
 
             try
             {
-                var updateResponse = await apiClient.Users.UpdateAsync(userId, request);
+                await graphClient.Users[userId]
+                    .Request()
+                    .UpdateAsync(user);
             }
             catch (Exception ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = $"{userId} ||| {ex.Message}";
             }
 
             return response;
@@ -78,23 +71,27 @@ namespace BlazorDemoCRUD.Service
                 response.Message = "Password is required";
             }
 
-            var tokenData = await GetAuth0Token();
+            var graphClient = GetGraphClient();
 
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
-
-            UserUpdateRequest request = new UserUpdateRequest()
+            var user = new User
             {
-                Password = model.NewPassword
+                PasswordProfile = new PasswordProfile
+                {
+                    ForceChangePasswordNextSignIn = false,
+                    Password = model.NewPassword
+                }
             };
 
             try
             {
-                var updateResponse = await apiClient.Users.UpdateAsync(userId, request);
+                await graphClient.Users[userId]
+                    .Request()
+                    .UpdateAsync(user);
             }
             catch(Exception ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = $"{userId} ||| {ex.Message}";
             }
 
             return response;
@@ -105,17 +102,18 @@ namespace BlazorDemoCRUD.Service
         {
             ServiceResponse response = new ServiceResponse();
 
-            var tokenData = await GetAuth0Token();
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
+            var graphClient = GetGraphClient();
 
             try
             {
-               await apiClient.Users.DeleteAsync(userId);
+                await graphClient.Users[userId]
+                    .Request()
+                    .DeleteAsync();
             }
             catch (Exception ex)
             {
-               response.Success = false;
-               response.Message = ex.Message;
+                response.Success = false;
+                response.Message = $"{userId} ||| {ex.Message}";
             }
 
             return response;
@@ -125,23 +123,23 @@ namespace BlazorDemoCRUD.Service
         {
             ServiceResponse<string> response = new ServiceResponse<string>();
 
-            var tokenData = await GetAuth0Token();
+            // var tokenData = await GetAuth0Token();
 
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
+            // var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
 
-            try
-            {
-                var user = await apiClient.Users.GetUsersByEmailAsync(email);
-                if (user == null || user.Count == 0)
-                {
-                    response.Message = "User not found";
-                    response.Success = false;
-                    return response;
-                }
+            // try
+            // {
+            //     var user = await apiClient.Users.GetUsersByEmailAsync(email);
+            //     if (user == null || user.Count == 0)
+            //     {
+            //         response.Message = "User not found";
+            //         response.Success = false;
+            //         return response;
+            //     }
 
-                response.Data = user.First().UserId;
-            }
-            catch { }
+            //     response.Data = user.First().UserId;
+            // }
+            // catch { }
             return response;
         }
 
@@ -149,22 +147,22 @@ namespace BlazorDemoCRUD.Service
         {
             List<ServiceResponseKeyValue<string, string>> response = new List<ServiceResponseKeyValue<string, string>>();
 
-            var tokenData = await GetAuth0Token();
+            // var tokenData = await GetAuth0Token();
 
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
+            // var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
 
-            foreach(var userId in userIds)
-            {
-                var user = await apiClient.Users.GetAsync(userId);
-                if(user != null)
-                {
-                    response.Add(new ServiceResponseKeyValue<string, string>()
-                    {
-                        Key = userId,
-                        Value = user.Email
-                    });
-                }
-            }
+            // foreach(var userId in userIds)
+            // {
+            //     var user = await apiClient.Users.GetAsync(userId);
+            //     if(user != null)
+            //     {
+            //         response.Add(new ServiceResponseKeyValue<string, string>()
+            //         {
+            //             Key = userId,
+            //             Value = user.Email
+            //         });
+            //     }
+            // }
 
             return response;
         }

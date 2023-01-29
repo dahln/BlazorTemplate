@@ -157,11 +157,17 @@ namespace BlazorDemoCRUD.Service
                             ? query.OrderBy(c => c.State)
                             : query.OrderByDescending(c => c.State);
             }
-            else if (model.SortBy == nameof(Common.Customer.City))
+            else if (model.SortBy == nameof(Common.Customer.Active))
             {
                 query = model.SortDirection == Common.SortDirection.Ascending
-                            ? query.OrderBy(c => c.State)
-                            : query.OrderByDescending(c => c.State);
+                            ? query.OrderBy(c => c.Active)
+                            : query.OrderByDescending(c => c.Active);
+            }
+            else if (model.SortBy == nameof(Common.Customer.Gender))
+            {
+                query = model.SortDirection == Common.SortDirection.Ascending
+                            ? query.OrderBy(c => c.Gender)
+                            : query.OrderByDescending(c => c.Gender);
             }
             else
             {
