@@ -1,11 +1,4 @@
-# BlazorDemoCRUD : A .NET Web App Demo
-
-In Progress: I'm currently exploring the pros/cons of Azure B2C vs Auth0.
-
-## Demo
-https://BlazorDemoCRUD.azurewebsites.net
-
-This demo app may be deleted and recreated from time to time. This is because I want to experiment with different ways to create and deploy Azure resources.
+# This branch exlores AzureB2C intead of Auth0.
 
 ## What & Why
 This project is a demo one way to build a .NET Web application, using Blazor, Web API, and SQL. Demonstrating simple CRUD & Search operations, protected by Authentication/Authorization. This is an active application that I continue update as .NET is updated and expanded. In some scenerios, this application could be used as a template for starting new projects.
