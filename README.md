@@ -50,9 +50,6 @@ I should note the Azure B2C does not have the same logout issue that Auth0 has. 
 "Auth0": {
     "Audience": "https://BlazorDemoCRUD.dahln.com",
     "Domain": "BlazorDemoCRUD.us.auth0.com",
-    "Authority": "https://BlazorDemoCRUD.us.auth0.com",
-    "ManagementAPI": "https://BlazorDemoCRUD.us.auth0.com/api/v2/",
-    "TokenAPI": "https://BlazorDemoCRUD.us.auth0.com/oauth/token",
     "AppClientId": "SINGLE-PAGE-APP-CLIENTID",
     "ClientId": "MACHINE-TO-MACHINE-ID-SHOULD-REPLACE-THIS",
     "Secret": "MACHINE-TO-MACHINE-SECRET-SHOULD-REPLACE-THIS"
