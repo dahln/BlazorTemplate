@@ -26,8 +26,8 @@ namespace BlazorDemoCRUD.Service
             parameters.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
             parameters.Add(new KeyValuePair<string, string>("client_id", _configuration.GetSection("Auth0").GetValue<string>("ClientId")));
             parameters.Add(new KeyValuePair<string, string>("client_secret", _configuration.GetSection("Auth0").GetValue<string>("Secret")));
-            parameters.Add(new KeyValuePair<string, string>("audience", _configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
-            var req = new HttpRequestMessage(HttpMethod.Post, _configuration.GetSection("Auth0").GetValue<string>("TokenAPI")) { Content = new FormUrlEncodedContent(parameters) };
+            parameters.Add(new KeyValuePair<string, string>("audience", $"https://{_configuration.GetSection("Auth0").GetValue<string>("Domain")}/api/v2/"));
+            var req = new HttpRequestMessage(HttpMethod.Post, $"https://{_configuration.GetSection("Auth0").GetValue<string>("Domain")}/oauth/token") { Content = new FormUrlEncodedContent(parameters) };
             var res = await client.SendAsync(req);
 
             var response = await res.Content.ReadAsStringAsync();
@@ -42,7 +42,7 @@ namespace BlazorDemoCRUD.Service
 
             var tokenData = await GetAuth0Token();
 
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
+            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri($"https://{_configuration.GetSection("Auth0").GetValue<string>("Domain")}/api/v2/"));
 
             UserUpdateRequest request = new UserUpdateRequest()
             {
@@ -80,7 +80,7 @@ namespace BlazorDemoCRUD.Service
 
             var tokenData = await GetAuth0Token();
 
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
+            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri($"https://{_configuration.GetSection("Auth0").GetValue<string>("Domain")}/api/v2/"));
 
             UserUpdateRequest request = new UserUpdateRequest()
             {
@@ -105,17 +105,22 @@ namespace BlazorDemoCRUD.Service
         {
             ServiceResponse response = new ServiceResponse();
 
+            var customersToOwnedByUser = _dbContext.Customers.Where(x => x.OwnerId == userId);
+            _dbContext.Customers.RemoveRange(customersToOwnedByUser);
+            await _dbContext.SaveChangesAsync();
+
             var tokenData = await GetAuth0Token();
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
+
+            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri($"https://{_configuration.GetSection("Auth0").GetValue<string>("Domain")}/api/v2/"));
 
             try
             {
-               await apiClient.Users.DeleteAsync(userId);
+                await apiClient.Users.DeleteAsync(userId);
             }
             catch (Exception ex)
             {
-               response.Success = false;
-               response.Message = ex.Message;
+                response.Success = false;
+                response.Message = ex.Message;
             }
 
             return response;
@@ -127,7 +132,7 @@ namespace BlazorDemoCRUD.Service
 
             var tokenData = await GetAuth0Token();
 
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
+            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri($"https://{_configuration.GetSection("Auth0").GetValue<string>("Domain")}/api/v2/"));
 
             try
             {
@@ -151,7 +156,7 @@ namespace BlazorDemoCRUD.Service
 
             var tokenData = await GetAuth0Token();
 
-            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri(_configuration.GetSection("Auth0").GetValue<string>("ManagementAPI")));
+            var apiClient = new ManagementApiClient(tokenData.access_token, new Uri($"https://{_configuration.GetSection("Auth0").GetValue<string>("Domain")}/api/v2/"));
 
             foreach(var userId in userIds)
             {

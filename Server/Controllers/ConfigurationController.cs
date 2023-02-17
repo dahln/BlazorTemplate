@@ -27,16 +27,15 @@ namespace BlazorDemoCRUD.Server.Controllers
 
         [HttpGet]
         [Route("api/v1/configuration")]
-        async public Task<IActionResult> GetClientConfiguration()
+        public IActionResult GetClientConfiguration()
         {
             Common.Configuration response = new Common.Configuration()
             {
                 ClientId = _configuration.GetSection("Auth0").GetValue<string>("AppClientId"),
                 Audience = _configuration.GetSection("Auth0").GetValue<string>("Audience"),
-                Authority = _configuration.GetSection("Auth0").GetValue<string>("Authority")
+                Authority = $"https://{_configuration.GetSection("Auth0").GetValue<string>("Domain")}"
             };
             return Ok(response);
         }
-
     }//End Controller
 }
