@@ -1,6 +1,6 @@
-using BlazorDemoCRUD.Common.Enumerations;
+using BlazorTemplate.Common.Enumerations;
 
-namespace BlazorDemoCRUD.Common
+namespace BlazorTemplate.Common
 {
     public class Customer
     {

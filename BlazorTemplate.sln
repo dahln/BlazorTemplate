@@ -2,15 +2,15 @@
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.0.0
 MinimumVisualStudioVersion = 16.0.0.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorDemoCRUD.Server", "Server\BlazorDemoCRUD.Server.csproj", "{0CEA57BF-76CB-486B-99B3-49C14D8EF16A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorTemplate.Server", "Server\BlazorTemplate.Server.csproj", "{0CEA57BF-76CB-486B-99B3-49C14D8EF16A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorDemoCRUD.Client", "Client\BlazorDemoCRUD.Client.csproj", "{36F9AA33-0CDC-4B11-B7DA-CB422608F73F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorTemplate.Client", "Client\BlazorTemplate.Client.csproj", "{36F9AA33-0CDC-4B11-B7DA-CB422608F73F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorDemoCRUD.Common", "Common\BlazorDemoCRUD.Common.csproj", "{EFB99001-BB47-4F1C-90AE-7F06BDCFF1D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorTemplate.Common", "Common\BlazorTemplate.Common.csproj", "{EFB99001-BB47-4F1C-90AE-7F06BDCFF1D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorDemoCRUD.Data", "Data\BlazorDemoCRUD.Data.csproj", "{ABA806E4-0250-4C6E-AAD5-5507FF666BBB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorTemplate.Data", "Data\BlazorTemplate.Data.csproj", "{ABA806E4-0250-4C6E-AAD5-5507FF666BBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorDemoCRUD.Service", "Service\BlazorDemoCRUD.Service.csproj", "{70975CE1-0F8A-4B32-A0D2-6ECE3824CA76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorTemplate.Service", "Service\BlazorTemplate.Service.csproj", "{70975CE1-0F8A-4B32-A0D2-6ECE3824CA76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

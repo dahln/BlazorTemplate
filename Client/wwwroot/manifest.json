@@ -1,6 +1,6 @@
 {
-  "name": "BlazorDemoCRUD",
-  "short_name": "BlazorDemoCRUD",
+  "name": "BlazorTemplate",
+  "short_name": "BlazorTemplate",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#191919",

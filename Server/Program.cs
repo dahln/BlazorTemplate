@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.ResponseCompression;
-using BlazorDemoCRUD.Data;
-using BlazorDemoCRUD.Service;
+using BlazorTemplate.Data;
+using BlazorTemplate.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 

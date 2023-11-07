@@ -1,4 +1,4 @@
-﻿namespace BlazorDemoCRUD.Common
+﻿namespace BlazorTemplate.Common
 {
     public class Search
     {

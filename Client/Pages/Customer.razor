@@ -1,10 +1,10 @@
 ﻿@page "/customer"
 @page "/customer/{id}"
 
-@using BlazorDemoCRUD.Common.Enumerations
+@using BlazorTemplate.Common.Enumerations
 
 @inject NavigationManager _navigationManager
-@inject BlazorDemoCRUD.Client.Services.API API
+@inject BlazorTemplate.Client.Services.API API
 @inject IModalService _modalService
 @inject IToastService _toastService
 @inject SpinnerService _spinnerService
@@ -165,7 +165,7 @@
     [Parameter]
     public string Id { get; set; }
 
-    private BlazorDemoCRUD.Common.Customer customer = new BlazorDemoCRUD.Common.Customer();
+    private BlazorTemplate.Common.Customer customer = new BlazorTemplate.Common.Customer();
     private bool Locked { get; set; }
 
     protected override async Task OnParametersSetAsync()

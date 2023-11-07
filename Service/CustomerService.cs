@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BlazorDemoCRUD.Data;
+using BlazorTemplate.Data;
 
-namespace BlazorDemoCRUD.Service
+namespace BlazorTemplate.Service
 {
     public class CustomerService
     {

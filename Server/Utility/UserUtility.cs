@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
 
-namespace BlazorDemoCRUD.Server.Utility
+namespace BlazorTemplate.Server.Utility
 {
     public static class UserUtility
     {

@@ -1,11 +1,11 @@
 ﻿using Auth0.ManagementApi;
 using Auth0.ManagementApi.Models;
-using BlazorDemoCRUD.Data;
+using BlazorTemplate.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
-namespace BlazorDemoCRUD.Service
+namespace BlazorTemplate.Service
 {
     public class AccountService
     {

@@ -13,10 +13,10 @@
 
 
   <ItemGroup>
-	<ProjectReference Include="..\Data\BlazorDemoCRUD.Data.csproj" />
-	<ProjectReference Include="..\Service\BlazorDemoCRUD.Service.csproj" />
-	<ProjectReference Include="..\Common\BlazorDemoCRUD.Common.csproj" />
-	<ProjectReference Include="..\Client\BlazorDemoCRUD.Client.csproj" />
+	<ProjectReference Include="..\Data\BlazorTemplate.Data.csproj" />
+	<ProjectReference Include="..\Service\BlazorTemplate.Service.csproj" />
+	<ProjectReference Include="..\Common\BlazorTemplate.Common.csproj" />
+	<ProjectReference Include="..\Client\BlazorTemplate.Client.csproj" />
 	</ItemGroup>
 
 <ItemGroup>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BlazorDemoCRUD.Data.Migrations
+namespace BlazorTemplate.Data.Migrations
 {
     public partial class InitialCreate : Migration
     {

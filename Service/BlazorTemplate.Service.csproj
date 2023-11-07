@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data\BlazorDemoCRUD.Data.csproj" />
+    <ProjectReference Include="..\Data\BlazorTemplate.Data.csproj" />
   </ItemGroup>
 
 </Project>

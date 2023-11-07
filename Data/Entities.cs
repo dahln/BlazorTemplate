@@ -1,8 +1,8 @@
-﻿using BlazorDemoCRUD.Common.Enumerations;
+﻿using BlazorTemplate.Common.Enumerations;
 using System;
 using System.Collections.Generic;
 
-namespace BlazorDemoCRUD.Data
+namespace BlazorTemplate.Data
 {
     public class Customer
     {

@@ -1,9 +1,5 @@
-[![CI/CD Azure App Service](https://github.com/shadowlings/BlazorDemoCRUD/actions/workflows/main_blazordemocrud.yml/badge.svg)](https://github.com/shadowlings/BlazorDemoCRUD/actions/workflows/main_blazordemocrud.yml)
-
-![BlazorDemoCRUD](https://repository-images.githubusercontent.com/593055304/693d4e94-295c-46bf-8473-c4baac737078)
-
 ## Demo
-https://demo.shadowlings.com/
+https://BlazorTemplate.dahln.com/
 
 ## What & Why
 This project is a example one way to build a .NET Web application, using Blazor, Web API, and SQL. Demonstrating simple CRUD & Search operations, protected by Authentication/Authorization. This is an active application that I continue update as .NET is updated and expanded. In some scenerios, this application could be used as a template for starting new projects.
@@ -32,9 +28,9 @@ I have used a lot of different Authentication/Authorization methods. In my opini
 1. Create a new tenant
 2. Delete the Generic "Default App"
 3. Create a new Auth0 application, select "Single Page Web Applications". In the new client, find the 'Allowed Callback URLs, and enter "https://{YOURDOMAIN}/authentication/login-callback". Then find 'Allowed Logout URL' and enter "https://{YOURDOMAIN}". Replace "YOURDOMAIN" with your specific domain.
-4. From the new client app, copy the "Domain" value and past it into Client AppSettings.json, prepending "https://", so that the Authority field in the appsettings reads: "Authority":"https://BlazorDemoCRUD.us.auth0.com"
+4. From the new client app, copy the "Domain" value and past it into Client AppSettings.json, prepending "https://", so that the Authority field in the appsettings reads: "Authority":"https://BlazorTemplate.us.auth0.com"
 5. From the new client app, copy the ClientId into the Server AppSettings.Json => AppClientId 
-6. In the Server AppSettings.json, in the Audience field, enter the API Url. In the case of the demo app, the Audience is "https://BlazorDemoCRUD.dahln.com"
+6. In the Server AppSettings.json, in the Audience field, enter the API Url. In the case of the demo app, the Audience is "https://BlazorTemplate.dahln.com"
 6. Create another Auth0 application, but this on will be under the "API" section. Provide a name, and identifier.
 7. Open the Auth0 Management API - System API app (this is not that application you just created). Go to the Machine to Machine applications tab. Select the API application and "Authorize" it. Under the permissions section select "create:client_grants","update:users","delete:users", and "read:users". Click update to apply the changes.
 8. Go to the Applications section, and open the Machine to Machine app. Copy the Client Id to the Server AppSettings.json file. Also copy the Client Secret to the AppSettings.json file.
@@ -48,8 +44,8 @@ I should note the Azure B2C does not have the same logout issue that Auth0 has. 
 #### Server AppSettings.json
 ```
 "Auth0": {
-    "Audience": "https://BlazorDemoCRUD.dahln.com",
-    "Domain": "BlazorDemoCRUD.us.auth0.com",
+    "Audience": "https://BlazorTemplate.dahln.com",
+    "Domain": "BlazorTemplate.us.auth0.com",
     "AppClientId": "SINGLE-PAGE-APP-CLIENTID",
     "ClientId": "MACHINE-TO-MACHINE-ID-SHOULD-REPLACE-THIS",
     "Secret": "MACHINE-TO-MACHINE-SECRET-SHOULD-REPLACE-THIS"
@@ -66,10 +62,10 @@ https://docs.microsoft.com/en-us/ef/core/cli/dotnet#common-options
 
 ## Using Visual Studio
 ```
-Add-Migration -Project BlazorDemoCRUD.Data -StartupProject BlazorDemoCRUD.Server -Name InitialCreate
+Add-Migration -Project BlazorTemplate.Data -StartupProject BlazorTemplate.Server -Name InitialCreate
 ```
 ```
-Update-Database -Project BlazorDemoCRUD.Data -StartupProject BlazorDemoCRUD.Server
+Update-Database -Project BlazorTemplate.Data -StartupProject BlazorTemplate.Server
 ```
 ## Using dotnet CLI
 ```

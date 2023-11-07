@@ -1,4 +1,4 @@
-﻿namespace BlazorDemoCRUD.Service
+﻿namespace BlazorTemplate.Service
 {
     public class Auth0TokenResponse
     {

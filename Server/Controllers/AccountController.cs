@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BlazorDemoCRUD.Server.Utility;
-using BlazorDemoCRUD.Service;
+using BlazorTemplate.Server.Utility;
+using BlazorTemplate.Service;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace BlazorDemoCRUD.Server.Controllers
+namespace BlazorTemplate.Server.Controllers
 {
     public class AccountController : Controller
     {

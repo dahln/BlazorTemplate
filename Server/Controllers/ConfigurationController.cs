@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BlazorDemoCRUD.Server.Utility;
-using BlazorDemoCRUD.Service;
+using BlazorTemplate.Server.Utility;
+using BlazorTemplate.Service;
 using Newtonsoft.Json;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 
-namespace BlazorDemoCRUD.Server.Controllers
+namespace BlazorTemplate.Server.Controllers
 {
     /// <summary>
     /// Client side configuration values are stored in the server side configuration.

@@ -1,9 +1,9 @@
-﻿using BlazorDemoCRUD.Server.Utility;
-using BlazorDemoCRUD.Service;
+﻿using BlazorTemplate.Server.Utility;
+using BlazorTemplate.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorDemoCRUD.Server.Controllers
+namespace BlazorTemplate.Server.Controllers
 {
     public class CustomerController : Controller
     {

@@ -1,11 +1,11 @@
 ﻿@page "/customers"
 
-@using BlazorDemoCRUD.Common
-@using BlazorDemoCRUD.Common.Enumerations
+@using BlazorTemplate.Common
+@using BlazorTemplate.Common.Enumerations
 
 @inject NavigationManager _navigationManger
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
-@inject BlazorDemoCRUD.Client.Services.API API
+@inject BlazorTemplate.Client.Services.API API
 
 <div class="row">
     <div class="col-md-12">
@@ -50,9 +50,9 @@
         <table class="table table-sm table-hover">
             <thead>
                 <tr>
-                    <th width="50%" scope="col" @onclick="(() => Sort(nameof(BlazorDemoCRUD.Common.Customer.Name)))" class="pointer">
+                    <th width="50%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.Customer.Name)))" class="pointer">
                         Name
-                        @if (Search.SortBy == nameof(BlazorDemoCRUD.Common.Customer.Name))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Common.Customer.Name))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -64,9 +64,9 @@
                             }
                         }
                     </th>
-                    <th width="20%" scope="col" @onclick="(() => Sort(nameof(BlazorDemoCRUD.Common.Customer.State)))" class="pointer">
+                    <th width="20%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.Customer.State)))" class="pointer">
                         State
-                        @if (Search.SortBy == nameof(BlazorDemoCRUD.Common.Customer.State))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Common.Customer.State))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -78,9 +78,9 @@
                             }
                         }
                     </th>
-                    <th width="20%" scope="col" @onclick="(() => Sort(nameof(BlazorDemoCRUD.Common.Customer.Active)))" class="pointer">
+                    <th width="20%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.Customer.Active)))" class="pointer">
                         Active
-                        @if (Search.SortBy == nameof(BlazorDemoCRUD.Common.Customer.Active))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Common.Customer.Active))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -92,9 +92,9 @@
                             }
                         }
                     </th>
-                    <th width="10%" scope="col" @onclick="(() => Sort(nameof(BlazorDemoCRUD.Common.Customer.Gender)))" class="pointer">
+                    <th width="10%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.Customer.Gender)))" class="pointer">
                         Gender
-                        @if (Search.SortBy == nameof(BlazorDemoCRUD.Common.Customer.Gender))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Common.Customer.Gender))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -172,7 +172,7 @@
     private Search Search { get; set; } = new Search();
     int PageSize { get; set; } = 15;
 
-    List<BlazorDemoCRUD.Common.Customer> Items = new List<BlazorDemoCRUD.Common.Customer>();
+    List<BlazorTemplate.Common.Customer> Items = new List<BlazorTemplate.Common.Customer>();
     int TotalFound { get; set; }
 
     protected override async Task OnParametersSetAsync()
@@ -194,7 +194,7 @@
         if (reset == true)
         {
             Search = new Search();
-            Search.SortBy = nameof(BlazorDemoCRUD.Common.Customer.Name);
+            Search.SortBy = nameof(BlazorTemplate.Common.Customer.Name);
             page = null;
         }
 

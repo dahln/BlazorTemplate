@@ -1,12 +1,12 @@
 ﻿using Blazored.Toast.Services;
 using BlazorSpinner;
-using BlazorDemoCRUD.Common;
+using BlazorTemplate.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Newtonsoft.Json;
 using System.Text;
 
-namespace BlazorDemoCRUD.Client.Services
+namespace BlazorTemplate.Client.Services
 {
     public class API
     {
