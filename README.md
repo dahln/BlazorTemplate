@@ -1,5 +1,5 @@
 ## Demo
-~~https://BlazorTemplate.dahln.com/~~ Demo Is Undermain Maintenance. Should be back up after .NET 8 is released.
+~~https://BlazorTemplate.dahln.com/~~ Demo is under maintenance. Should be back up after .NET 8 is released.
 
 ## What & Why
 This project is a example one way to build a .NET Web application, using Blazor, Web API, and SQL. Demonstrating simple CRUD & Search operations, protected by Authentication/Authorization. This is an active application that I continue update as .NET is updated and expanded. In some scenerios, this application could be used as a template for starting new projects.
