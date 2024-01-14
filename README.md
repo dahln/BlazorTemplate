@@ -2,7 +2,7 @@
 [![App CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/azure-static-web-apps-purple-pond-08488b110.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/azure-static-web-apps-purple-pond-08488b110.yml)
 
 ## Demo
-[https://template.dahln.com](https://template.dahln.com)
+Application runs locally. Proudction demo is coming soon.
 
 This is a fully functional demo. If this template was helpful to you, please consider supporting this project by donating.
 
