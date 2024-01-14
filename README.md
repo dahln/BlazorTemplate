@@ -1,4 +1,5 @@
 [![API CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml)
+[![App CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/azure-static-web-apps-purple-pond-08488b110.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/azure-static-web-apps-purple-pond-08488b110.yml)
 
 ## Demo
 [https://template.dahln.com](https://template.dahln.com)
