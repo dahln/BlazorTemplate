@@ -1,3 +1,5 @@
+[![API CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml)
+
 ## Demo
 [https://template.dahln.com](https://template.dahln.com)
 
