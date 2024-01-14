@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
     <PackageReference Include="SendGrid" Version="9.28.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -19,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <ProjectReference Include="..\BlazorTemplate.App\BlazorTemplate.App.csproj" />
 	  <ProjectReference Include="..\BlazorTemplate.Database\BlazorTemplate.Database.csproj" />
 	</ItemGroup>
 

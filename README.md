@@ -25,9 +25,9 @@ Some of the page and components in the WASM client app are copied from or derive
 
 ## Getting Started
 Getting started with this project is easy.
-1. This project has no outside dependencies you are required to setup. The database is a SQLite DB, and the database will be created automatically when you startup the project the first time. You simply need to clone the repo, then run the API project and the App project, by calling 'dotnet watch' from both the API and App projects.
+1. This project has no required outside dependencies to get started. The database is a SQLite DB, and the database will be created automatically when you startup the project the first time. You simply need to clone the repo, then run the API project by calling 'dotnet watch' from the API project folder.
 2. Authentication is handled by ASP Identity, and is stored in your own DB.
-3. This template uses SendGrid to send emails. The template does not require SendGrid in order to work, but some features are not available until you add a SendGrid API key to the AppSettings.json. Features you cannot use without SendGrid include:
+3. On optional (but recommended) dependency is SendGrid. This template uses SendGrid to send emails. The template does not require SendGrid in order to work, however some features are not available until you add a SendGrid API key and system email address to the AppSettings.json. Features you cannot use without SendGrid include:
 - Account Activation and Email Confirmation
 - Account/Password recovery
 - Allowing a user to change their email/username.
@@ -35,6 +35,10 @@ Getting started with this project is easy.
 
 ## Project Architecture
 This application has 4 projects in the solution. The API, the App, Common, and Database. The API is all the server functionality; it contains all the database operations and server side logic. The App is a Blazor WASM project; it consumes the API. The Common project is data models that are common to both the API and the App; these 'Common' models make it easy to standardize the format of the data passed between the API and the App. The database project contains all the Entities and DB Context. Depending on your needs, you could create a service layer to contain all the business logic and remove DB operations from the API project. Every project is different, this template is a starting point.
+
+The API project acts as the host for the API and the App. The App, while an independent application, still needs to be hosted somewhere. This template combines hosts the App as part of the API. This fits the needs for most applications, but is easy to separate if needed. Another benefit of combining hosting is that it removes the necessity for obnoxious CORS configurations.
+
+On startup you can browse to Swagger to use the API directly or browse to the App.
 
 ## API Versioning
 There are tools to handle API versioning. Add which ever tools you prefer. This template handles API version manually by specifying v1 in the service URL.

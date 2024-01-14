@@ -29,14 +29,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStat
 builder.Services.AddScoped(
     sp => (IAccountManagement)sp.GetRequiredService<AuthenticationStateProvider>());
 
-//This is a "static" approach to environments. Adjusted for your individual needs.
-string ApiUrl;
-if(builder.HostEnvironment.IsProduction())
-    ApiUrl = @"https://BlazorTemplateApi.AzureWebsites.net";
-else
-    ApiUrl = @"https://localhost:7267/";
-
-builder.Services.AddHttpClient("API", client => client.BaseAddress = new Uri(ApiUrl))
+builder.Services.AddHttpClient("API", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<CookieHandler>();
 
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("API"));

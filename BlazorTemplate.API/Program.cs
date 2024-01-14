@@ -9,15 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Add CORS policy for WASM client. URL for the client is pulled from AppSettings.
-builder.Services.AddCors(
-    options => options.AddPolicy(
-        "wasm",
-        policy => policy.WithOrigins(builder.Configuration.GetValue<string>("Client").Split(","))
-            .AllowAnyMethod()
-            .SetIsOriginAllowed(pol => true)
-            .AllowAnyHeader()
-            .AllowCredentials()));
 
 //Add the Database context.
 builder.Services.AddDbContext<ApplicationDbContext>(
@@ -66,21 +57,28 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-if (app.Environment.IsDevelopment())
-{
+// I want to enable swagger in production for this template. Disable it based on your needs.
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
 app.UseHttpsRedirection();
 
-//CORS policy was created earlier. The app needs to specify that it is being used.
-app.UseCors("wasm");
+
+//Host the BlazorTemplate.App files in the same 'Server' process as the API.
+app.UseBlazorFrameworkFiles();
+app.UseStaticFiles();
+app.UseRouting();
 
 //Authorization was added, now the app needs to use it.
 app.UseAuthorization();
 
 app.MapControllers();
+
+//Necessary For the BlazorTemplate.App
+app.MapFallbackToFile("index.html");
 
 //Expose identity API endpoints. Identity API doesn't include a logout method. One was created in the account controller, along with other account related endpoints.
 app.MapIdentityApi<IdentityUser>();
