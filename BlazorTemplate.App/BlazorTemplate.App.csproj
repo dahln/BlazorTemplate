@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>annotations</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
+	  <PackageReference Include="Blazored.Modal" Version="7.1.0" />
+	  <PackageReference Include="Blazored.Toast" Version="4.1.0" />
+	  <PackageReference Include="BlazorSpinner" Version="1.4.2" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="..\BlazorTemplate.Common\BlazorTemplate.Common.csproj" />
+	</ItemGroup>
+  
+</Project>

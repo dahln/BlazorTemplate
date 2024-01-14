@@ -1,0 +1,160 @@
+﻿@page "/login"
+@using BlazorTemplate.Identity
+@inject IAccountManagement Acct
+@inject BlazorTemplate.App.Services.API API
+
+
+<AuthorizeView>
+    <Authorized>
+        <div class="alert alert-success">You are logged in as @context.User.Identity?.Name.</div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="row mt-5">
+            <div class="col-md-4 offset-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Login</h2>
+                    </div>
+                    <div class="card-body">
+                        @if (errors)
+                        {
+                            @foreach (var error in errorList)
+                            {
+                                <div class="alert alert-danger">@error</div>
+                            }
+                        }
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="email">
+                                    Email:
+                                </label>
+                                <input required id="email" name="emailInput" placeholder="Enter your email address" type="email" @bind-value="email" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-md-12">
+                                <label for="password">
+                                    Password:
+                                </label>
+                                <input required id="password" name="passwordInput" placeholder="Enter your password" type="password" @bind-value="password" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <button @onclick="DoLoginAsync" class="btn btn-primary">Login</button>
+                            </div>
+                        </div>
+                        @if(AllowAllOperations)
+                        {
+                        <div class="row mt-3">
+                            <a href="password/forgot">Forgot Password</a>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <a href="confirmEmailResend">Resend Email Confirmation</a>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private bool success, errors;
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private List<string> errorList { get; set; } = new List<string>();
+    private bool AllowAllOperations { get; set; } = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //Check if the server will allow 'All Operations', if NOT then do not show the password recovery or resend email confirmation.
+        var response = await API.SendRequestAsync<bool>(HttpMethod.Get, "api/v1/account/operations", null, false);
+        AllowAllOperations = response.Data;            
+    }
+
+    public async Task DoLoginAsync()
+    {
+        success = errors = false;
+        errorList = [];
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            errors = true;
+            errorList = ["Email is required."];
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            errors = true;
+            errorList = ["Password is required."];
+            return;
+        }
+
+        var result = await Acct.LoginAsync(email!, password!);
+
+        if (result.Succeeded)
+        {
+            success = true;
+            email = password = string.Empty;
+        }
+        else
+        {
+            errors = true;
+            errorList = result.ErrorList;
+        }
+    }
+
+    private string confirmPassword = string.Empty;
+
+    public async Task DoRegisterAsync()
+    {
+        success = errors = false;
+        errorList = [];
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            errors = true;
+            errorList = ["Email is required."];
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            errors = true;
+            errorList = ["Password is required."];
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(confirmPassword))
+        {
+            errors = true;
+            errorList = ["Please confirm your password."];
+            return;
+        }
+
+        if (password != confirmPassword)
+        {
+            errors = true;
+            errorList = ["Passwords don't match."];
+            return;
+        }
+
+        var result = await Acct.RegisterAsync(email!, password!);
+
+        if (result.Succeeded)
+        {
+            success = true;
+            email = password = confirmPassword = string.Empty;
+        }
+        else
+        {
+            errors = true;
+            errorList = result.ErrorList;
+        }
+    }
+}

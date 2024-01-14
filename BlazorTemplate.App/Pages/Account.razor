@@ -1,0 +1,207 @@
+﻿@page "/account"
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+@inject NavigationManager Navigation
+
+@inject NavigationManager _navigationManager
+@inject BlazorTemplate.App.Services.API API
+@inject IModalService _modalService
+@inject IToastService _toastService
+@inject SpinnerService _spinnerService
+
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized>
+        <div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3>Account Settings</h3>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-4 mt-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Change Email</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label>Current Email: @context.User.Identity.Name</label>
+                                </div>
+                            </div>
+                            <fieldset disabled="@Disabled">
+                                <div class="row mt-3">
+                                    <div class="col-lg-12">
+                                        <input type="text" class="form-control" @bind="NewEmail" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-lg-12">
+                                        <input type="button" class="btn btn-primary float-end " value="Save Email" @onclick="ChangeEmail" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Change Password</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <input type="password" class="form-control" @bind="OldPassword" placeholder="Old Password" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-lg-12">
+                                    <input type="password" class="form-control" @bind="NewPassword" placeholder="New Password"/>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-12">
+                                    <input type="password" class="form-control" @bind="ConfirmPassword" placeholder="Confirm Password" />
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-lg-12">
+                                    <input type="button" class="btn btn-primary float-end" value="Save Password" @onclick="ChangePassword" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mt-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Delete Account</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p>This will delete you account and allow associated information. This operation cannot be undone.</p>
+                                    <input type="button" class="btn btn-danger" value="Delete Account" @onclick="DeleteAccount" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </Authorized>
+    <NotAuthorized>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+
+    public string NewEmail { get; set; }
+    public string OldPassword { get; set; }
+    public string NewPassword { get; set; }
+    public string ConfirmPassword { get; set; }
+    public bool Disabled { get; set; } = false;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var response = await API.SendRequestAsync<bool>(HttpMethod.Get, "api/v1/account/operations", null, false);
+        Disabled = response.Data == false ? true : false;
+    }
+
+
+    async public Task ChangeEmail()
+    {
+        var userAlreadyExists = await API.SendRequestAsync<bool>(HttpMethod.Post, "api/v1/account/exists", new Common.AccountEmail() { Email = NewEmail }, false);
+        if(userAlreadyExists.Data == false)
+        {
+            var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to change your email");
+            var modalResult = await modal.Result;
+
+            if (modalResult.Cancelled) { }
+            else
+            {
+                Common.IdentityManageInfoUpdate content = new Common.IdentityManageInfoUpdate() { NewEmail = NewEmail };
+                var response = await API.SendRequestAsync<Common.IdentityManageUserResponse>(HttpMethod.Post, "manage/info", content, true, true);
+                if(response.Success)
+                {
+                    _toastService.ShowSuccess("Email changed. An email has been sent to the new email. Your email will not be changed until you confirm the email using the link sent to you.");
+                }
+                else
+                {
+                    foreach(var error in response.Errors)
+                    {
+                        _toastService.ShowError(error);
+                    }
+                }
+            }
+        }
+        else
+        {
+            _toastService.ShowError("Email is unavailable");
+        }
+    }
+
+    async public Task ChangePassword()
+    {
+        var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to change your password");
+        var modalResult = await modal.Result;
+
+        if (modalResult.Cancelled) { }
+        else
+        {
+            Common.IdentityManageInfoUpdate content = new Common.IdentityManageInfoUpdate() { OldPassword = OldPassword, NewPassword = NewPassword };
+            var response = await API.SendRequestAsync<Common.IdentityManageUserResponse>(HttpMethod.Post, "manage/info", content, true, true);
+            if(response.Success)
+            {
+                _toastService.ShowSuccess("Done. Use your new password with next sign in.");
+            }
+            else
+            {
+                foreach(var error in response.Errors)
+                {
+                    _toastService.ShowError(error);
+                }
+            }
+        }
+    }
+
+    async public Task DeleteAccount()
+    {
+        var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to delete your account. This cannot be undone.");
+        var modalResult = await modal.Result;
+
+        if (modalResult.Cancelled) { }
+        else
+        {
+            var response = await API.SendRequestAsync<bool>(HttpMethod.Delete, "api/v1/account");
+            if(response.Success)
+            {
+                //The logout component and state change doesn't work well if the 
+                //user has been deleted. On an accout deletion, call the logout to 
+                //dispose of the cookie and then refresh the application.
+                await API.SendRequestAsync<bool>(HttpMethod.Post, "api/v1/account/logout");
+                Navigation.NavigateTo("login", true);
+            }
+            else
+            {
+                foreach(var error in response.Errors)
+                {
+                    _toastService.ShowError(error);
+                }
+            }
+        }
+    }
+
+}
