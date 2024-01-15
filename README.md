@@ -51,14 +51,8 @@ There are tools to handle API versioning. Add which ever tools you prefer. This 
 ## Why SQLite?
 It runs on Windows and Linux. It is great for this template. Depending on your projects needs, it may work for production. If you need more than SQLite offers then I recommend switching to Azure SQL. If you switch to Azure SQL, besure to delete your SQLite DB migrations and create new a 'Initial Migration' for your new Azure SQL DB.
 
-## Accessing the API from the client App
-The client App needs to know the URL of the API. This is specified in the Program.cs of the App project. Adjust it as necessary. 
-
 ## [SendGrid](https://sendgrid.com/en-us/pricing)
 This project uses SendGrid to send emails. A SendGrid API key is required. The demo has a key configured, but that value/key is not checked into the Repo. You will need to specify your own SendGrid API key and system email address. Some features that require email are not available until you provide the necessary SendGrid values. It is a simple process to create your own SendGrid account and retreive your API key.
-
-## CORS
-Because the API and App are two seperate applications, CORS is a concern. The API creates a CORS policy. The 'Client' setting in AppSettings.json specifies the allowed origins for the CORS policy. The API reads and parses this as a comma separated list; more than likely you will only have a single origin.
 
 ## DB Migrations
 This project includes the necessary "Initial Creation" DB migration, used for the initial creation of a DB when the application connects to the DB for the first time. The Program.cs in the API project will automatically check for DB migrations which need to run, and run them automatically. You can run the DB migrations manually if desired. The commands below outline how to generate a DB migration and run a migration.
@@ -85,15 +79,10 @@ Sensative configuration data, such as the DB connection strings, are kept in the
  git update-index --no-assume-unchanged .\BlazorTemplate.API\appsettings.json
  ```
 
-## Environments
-This template is set up for 2 environments: Development and Production. When running locally (Development), the App will detect you are running in a development environment and send requests to the local API. In production, it sends API requests to the URL specified in the App.Program.cs. Future versions of the template might add a different way to handle environment variables for the Blazor WebAssembly App. In production, add the necessary secrets or environment variables, as represented in the API.AppSettings.json.
-
-
 ## Setup CI/CD
-Most applications need to be built and deployed. Outlined here are steps to setup automated build and deployments (CI/CD)
+Most applications need to be build and deployed. Outlined here are steps to setup automatted build and deployments (CI/CD)
 1. [Microsoft outlines how to use Azure App Service Deployment Center to setup CI/CD with GitHub Actions](https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#use-the-deployment-center). 
-2. This project requires two deployments. A deployment for the API and a deployment for the client App. Create an Azure App Service and use the 'Deployment Center' to sent up CI/CD for the API. Adjust the .yaml file to only build and publish the 'API' project.
-3. Create a Azure Static Web App for the client App. Adjusted the generated .yaml file to only build and deploy the 'App' project.
+2. This project is a ["Hosted Blazor"](https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-8.0#hosted-deployment-with-aspnet-core) application. When I deployed this application, I found that it wouldn't startup automatically. The default yaml workflow file, created by Azure, builds and publishes all projects in the solution. The consequence of this is that multiple .runtimeconfig files are created. Specifying that the build and publish should build the 'Server' project solves this issue. As a result, no special startup commands are necessary.
 
 ## Licensing
 This project uses the 'Unlicense'.  It is a simple license - review it at your own leisure.

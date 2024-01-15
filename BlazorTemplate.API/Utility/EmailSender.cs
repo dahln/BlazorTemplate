@@ -20,13 +20,15 @@ internal sealed class EmailSender : IEmailSender<IdentityUser>
     private IConfiguration _configuration { get; }
     public AuthMessageSenderOptions Options { get; }
     private readonly ILogger _logger;
+    private IHttpContextAccessor _httpContextAccessor;
 
     public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor, IConfiguration configuration,
-                       ILogger<EmailSender> logger)
+                       ILogger<EmailSender> logger, IHttpContextAccessor httpContextAccessor)
     {
         _configuration = configuration;
         Options = optionsAccessor.Value;
         _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     private async Task SendEmailAsync(string toEmail, string subject, string message)
@@ -72,14 +74,18 @@ internal sealed class EmailSender : IEmailSender<IdentityUser>
                                : $"Failure Email to {toEmail}");
     }
 
+    //This is the stock method.
     // public Task SendConfirmationLinkAsync(IdentityUser user, string email, string confirmationLink) =>
     //     SendEmailAsync(email, "Confirm your email", $"Please confirm your account by <a href='{confirmationLink}'>clicking here</a>. Thank you.");
     public Task SendConfirmationLinkAsync(IdentityUser user, string email, string confirmationLink)
     {
-        //confirmationLink using the Server base URL
-        //confirmationLinkUri uses the Client base URL.
+        //Adjust the confirmEmail link to use a link in the App, instead of in the API. Keeps the user flow in the App.
         Uri confirmationLinkUri = new Uri(confirmationLink);
-        Uri adjustedConfirmationLink = new Uri(new Uri(_configuration.GetValue<string>("Client")), confirmationLinkUri.PathAndQuery);
+        var adjustedUrlForApp = confirmationLinkUri.PathAndQuery.Replace("confirmEmail","confirmingEmail");
+        var hostUrl = _httpContextAccessor.HttpContext.Request.Host.Value;
+
+        Uri adjustedConfirmationLink = new Uri($"https://{hostUrl}{adjustedUrlForApp}");
+
 
         if(adjustedConfirmationLink.Query.Contains("changedEmail="))
         {
@@ -95,8 +101,11 @@ internal sealed class EmailSender : IEmailSender<IdentityUser>
     public Task SendPasswordResetLinkAsync(IdentityUser user, string email, string resetLink) =>
         SendEmailAsync(email, "Reset your password", $"Please reset your password by <a href='{resetLink}'>clicking here</a>.");
  
-    public Task SendPasswordResetCodeAsync(IdentityUser user, string email, string resetCode) =>
-        SendEmailAsync(email, "Reset your password", $"Please reset your password using the following link <a href='{_configuration.GetValue<string>("Client")}password/reset/{resetCode}'>Reset Password.</a>");
+    public Task SendPasswordResetCodeAsync(IdentityUser user, string email, string resetCode)
+    {
+        var resetLink = $"https://{_httpContextAccessor.HttpContext.Request.Host.Value}/password/reset/{resetCode}";
+        return SendEmailAsync(email, "Reset your password", $"Please reset your password using the following link <a href='{resetLink}'>Reset Password.</a>");
+    }
 }
 
 public class EmailSenderGeneric : IEmailSender

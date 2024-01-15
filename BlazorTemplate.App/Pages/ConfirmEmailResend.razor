@@ -51,7 +51,7 @@
     async public Task SendConfirmation()
     {
         Common.IdentityResendEmailConfirmation content = new Common.IdentityResendEmailConfirmation() { Email = Email };
-        var response = await API.SendRequestAsync<bool>(HttpMethod.Post, "resendConfirmationEmail", content);
+        var response = await API.SendRequestAsync<string>(HttpMethod.Post, "resendConfirmationEmail", content);
         if(response.Success)
         {
             _toastService.ShowSuccess("Done. Check your email for confirmation instructions.");

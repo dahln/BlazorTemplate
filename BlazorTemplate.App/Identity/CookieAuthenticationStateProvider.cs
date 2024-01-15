@@ -28,7 +28,8 @@ namespace BlazorTemplate.Identity
                     email,
                     password
                 };
-                var result = await API.SendRequestAsync(HttpMethod.Post,"register", content, true);
+                var result = await API.SendRequestAsync(HttpMethod.Post,"register", content, true, true);
+
 
                 // successful?
                 if (result.Success)
@@ -63,7 +64,7 @@ namespace BlazorTemplate.Identity
                     password
                 };
                 // login with cookies
-                var result = await API.SendRequestAsync(HttpMethod.Post, "login?useCookies=true", content, true);
+                var result = await API.SendRequestAsync(HttpMethod.Post, "login?useCookies=true", content, true, true);
 
                 // success?
                 if (result.Success)
