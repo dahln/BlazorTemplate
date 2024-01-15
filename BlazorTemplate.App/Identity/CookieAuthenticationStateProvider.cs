@@ -63,7 +63,7 @@ namespace BlazorTemplate.Identity
                     password
                 };
                 // login with cookies
-                var result = await API.SendRequestAsync(HttpMethod.Post, "login?useCookies=true", content, true);
+                var result = await API.SendRequestAsync(HttpMethod.Post, "login?useCookies=true", content, true, false, false);
 
                 // success?
                 if (result.Success)
@@ -112,7 +112,7 @@ namespace BlazorTemplate.Identity
             try
             {
                 // the user info endpoint is secured, so if the user isn't logged in this will fail
-                var userResponse = await API.SendRequestAsync<UserInfo>(HttpMethod.Get, "manage/info");
+                var userResponse = await API.SendRequestAsync<UserInfo>(HttpMethod.Get, "manage/info", null, false, false, false);
 
                 
                 if (userResponse.Success)

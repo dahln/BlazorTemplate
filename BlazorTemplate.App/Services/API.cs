@@ -44,7 +44,7 @@ namespace BlazorTemplate.App.Services
             _navigationManager = navigationManager;
         }  
 
-        async public Task<ApiResponse> SendRequestAsync(HttpMethod method, string path, object content = null, bool showSpinner = true, bool isIdentityRequest = false)
+        async public Task<ApiResponse> SendRequestAsync(HttpMethod method, string path, object content = null, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true)
         {
             if(showSpinner)
                 _spinnerService.Show();
@@ -71,12 +71,11 @@ namespace BlazorTemplate.App.Services
             };
 
             //If the response was a 401 unauthorized then reload the application and send the user to the Login page, unless they are already on the Login page.
-            var currentPage = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
-            if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() != "login")
+            if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
             {
                 _navigationManager.NavigateTo("login", true);
             }
-            else if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() == "login")
+            else if(response.StatusCode == HttpStatusCode.Unauthorized && !redirectOn404)
             {
                 //Login error:
                 apiResponse.Errors = await ParseIdentityLoginErrorsResponse(response);
@@ -94,7 +93,7 @@ namespace BlazorTemplate.App.Services
 
             return apiResponse;
         }
-        async public Task<ApiResponse<T>> SendRequestAsync<T>(HttpMethod method, string path, object content = null, bool showSpinner = true, bool isIdentityRequest = false)
+        async public Task<ApiResponse<T>> SendRequestAsync<T>(HttpMethod method, string path, object content = null, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true)
         {
             if(showSpinner)
                 _spinnerService.Show();
@@ -121,12 +120,11 @@ namespace BlazorTemplate.App.Services
             };
 
             //If the response was a 401 unauthorized then reload the application and send the user to the Login page, unless they are already on the Login page.
-            var currentPage = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
-            if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() != "login")
+            if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
             {
                 _navigationManager.NavigateTo("login", true);
             }
-            else if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() == "login")
+            else if(response.StatusCode == HttpStatusCode.Unauthorized && !redirectOn404)
             {
                 //Login error:
                 apiResponse.Errors = await ParseIdentityLoginErrorsResponse(response);
@@ -170,8 +168,8 @@ namespace BlazorTemplate.App.Services
             }
             catch(Exception ex)
             {
-                // _toastService.ShowError($"API Parsing Error. Exception: {ex.Message} - {ex.StackTrace}");
-                _toastService.ShowError("API Parsing Error.");
+                _toastService.ShowError($"API Parsing Error. Exception: {ex.Message} - {ex.StackTrace}");
+                // _toastService.ShowError("API Parsing Error.");
                 return default(T);
             }
         }
@@ -203,9 +201,9 @@ namespace BlazorTemplate.App.Services
             }
             catch(Exception ex)
             {
-                string error = "API Parsing Error.";
-                _toastService.ShowError(error);
-                // _toastService.ShowError($"{error} Exception: {ex.Message} - {ex.StackTrace}");
+                string error = "Identity API Parsing Error.";
+                // _toastService.ShowError(error);
+                _toastService.ShowError($"{error} Exception: {ex.Message} - {ex.StackTrace}");
                 errors.Add(error);
                 return errors;
             }
