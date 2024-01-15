@@ -1,7 +1,7 @@
 [![CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml)
 
 ## Demo
-Application runs locally. Proudction demo is coming soon.
+[https://template.dahln.com](https://template.dahln.com)
 
 This is a fully functional demo. If this template was helpful to you, please consider supporting this project by donating.
 
