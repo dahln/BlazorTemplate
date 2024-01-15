@@ -27,9 +27,9 @@ Getting started with this project is easy.
 1. This project has no required outside dependencies to get started. The database is a SQLite DB, and the database will be created automatically when you startup the project the first time. You simply need to clone the repo, then run the API project by calling 'dotnet watch' from the API project folder.
 2. Authentication is handled by ASP Identity, and is stored in your own DB.
 3. On optional (but recommended) dependency is SendGrid. This template uses SendGrid to send emails. The template does not require SendGrid in order to work, however some features are not available until you add a SendGrid API key and system email address to the AppSettings.json. Features you cannot use without SendGrid include:
-- Account Activation and Email Confirmation
-- Account/Password recovery
-- Allowing a user to change their email/username.
+   - Account Activation and Email Confirmation
+   - Account/Password recovery
+   - Allowing a user to change their email/username.
 4. This application demonstrates simple CRUD operations. You can create data in the UI, or you can use the API and the 'seed' method to create a large quantity of seed data to expirament with.
 
 ## Project Architecture
