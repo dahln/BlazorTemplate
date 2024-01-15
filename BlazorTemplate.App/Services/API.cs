@@ -70,8 +70,10 @@ namespace BlazorTemplate.App.Services
                 Success = response.IsSuccessStatusCode
             };
 
+            var currentPage = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
+            Console.WriteLine(currentPage);
             //If the response was a 401 unauthorized then reload the application and send the user to the Login page.
-            if(response.StatusCode == HttpStatusCode.Unauthorized)
+            if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() != "lower")
             {
                 _navigationManager.NavigateTo("login", true);
             }
