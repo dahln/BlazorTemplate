@@ -1,5 +1,4 @@
-[![API CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml)
-[![App CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/azure-static-web-apps-purple-pond-08488b110.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/azure-static-web-apps-purple-pond-08488b110.yml)
+[![CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml)
 
 ## Demo
 Application runs locally. Proudction demo is coming soon.
