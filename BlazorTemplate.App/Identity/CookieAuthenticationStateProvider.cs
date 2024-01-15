@@ -30,7 +30,6 @@ namespace BlazorTemplate.Identity
                 };
                 var result = await API.SendRequestAsync(HttpMethod.Post,"register", content, true, true);
 
-
                 // successful?
                 if (result.Success)
                 {
@@ -64,7 +63,7 @@ namespace BlazorTemplate.Identity
                     password
                 };
                 // login with cookies
-                var result = await API.SendRequestAsync(HttpMethod.Post, "login?useCookies=true", content, true, true);
+                var result = await API.SendRequestAsync(HttpMethod.Post, "login?useCookies=true", content, true);
 
                 // success?
                 if (result.Success)
@@ -74,6 +73,15 @@ namespace BlazorTemplate.Identity
 
                     // success!
                     return new FormResult { Succeeded = true };
+                }
+                else if(result.Errors.Any())
+                {
+                    //If Login errors are returned, show those, other wise use the default message.
+                    return new FormResult
+                    {
+                        Succeeded = false,
+                        ErrorList = result.Errors
+                    };
                 }                
             }
             catch { }

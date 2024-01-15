@@ -220,8 +220,6 @@
 
     async private Task Sort(string column)
     {
-        Console.WriteLine(column);
-
         Search.SortBy = column;
         Search.SortDirection = Search.SortDirection == SortDirection.Ascending ? SortDirection.Descending : SortDirection.Ascending;
 

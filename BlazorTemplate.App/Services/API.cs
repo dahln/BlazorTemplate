@@ -70,12 +70,16 @@ namespace BlazorTemplate.App.Services
                 Success = response.IsSuccessStatusCode
             };
 
+            //If the response was a 401 unauthorized then reload the application and send the user to the Login page, unless they are already on the Login page.
             var currentPage = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
-            Console.WriteLine(currentPage);
-            //If the response was a 401 unauthorized then reload the application and send the user to the Login page.
-            if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() != "lower")
+            if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() != "login")
             {
                 _navigationManager.NavigateTo("login", true);
+            }
+            else if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() == "login")
+            {
+                //Login error:
+                apiResponse.Errors = await ParseIdentityLoginErrorsResponse(response);
             }
 
             //Parse the data for either success or errors.
@@ -116,10 +120,16 @@ namespace BlazorTemplate.App.Services
                 Success = response.IsSuccessStatusCode
             };
 
-            //If the response was a 401 unauthorized then reload the application and send the user to the Login page.
-            if(response.StatusCode == HttpStatusCode.Unauthorized)
+            //If the response was a 401 unauthorized then reload the application and send the user to the Login page, unless they are already on the Login page.
+            var currentPage = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
+            if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() != "login")
             {
-                //_navigationManager.NavigateTo("login", true);
+                _navigationManager.NavigateTo("login", true);
+            }
+            else if(response.StatusCode == HttpStatusCode.Unauthorized && currentPage.ToLower() == "login")
+            {
+                //Login error:
+                apiResponse.Errors = await ParseIdentityLoginErrorsResponse(response);
             }
 
             //Parse the data for either success or errors.
@@ -158,8 +168,9 @@ namespace BlazorTemplate.App.Services
                     return default(T);
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                // _toastService.ShowError($"API Parsing Error. Exception: {ex.Message} - {ex.StackTrace}");
                 _toastService.ShowError("API Parsing Error.");
                 return default(T);
             }
@@ -190,12 +201,43 @@ namespace BlazorTemplate.App.Services
 
                 return errors;
             }
-            catch
+            catch(Exception ex)
             {
                 string error = "API Parsing Error.";
                 _toastService.ShowError(error);
+                // _toastService.ShowError($"{error} Exception: {ex.Message} - {ex.StackTrace}");
                 errors.Add(error);
                 return errors;
+            }
+        }
+
+        /// <summary>
+        /// The login API call returns a different response object. This will parse it.
+        /// This was necessary inorder to show a 'Lockout' at the appropriate times.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public async Task<List<string>> ParseIdentityLoginErrorsResponse(HttpResponseMessage response)
+        {
+            var errors = new List<string>();
+            try
+            {
+                //Login error:
+                var details = await response.Content.ReadAsStringAsync();
+                Newtonsoft.Json.Linq.JObject jsonObject = Newtonsoft.Json.Linq.JObject.Parse(details);
+                string detailValue = (string)jsonObject["detail"];
+                if(!string.IsNullOrEmpty(detailValue))
+                    errors.Add(detailValue);
+
+                //Don't want this error. It simply means incorrect username/password.
+                errors = errors.Where(x => x != "Failed").ToList();
+
+                return errors;
+            }
+            catch(Exception ex)
+            {
+               //Console.WriteLine($"API Parsing Login Error. Exception: {ex.Message} - {ex.StackTrace}");
+               return errors;
             }
         }
     }

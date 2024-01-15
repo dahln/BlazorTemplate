@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Add this so we can access HTTPContext data in other services.
+builder.Services.AddHttpContextAccessor();
 
 //Add the Database context.
 builder.Services.AddDbContext<ApplicationDbContext>(
@@ -31,6 +33,9 @@ builder.Services.AddSwaggerGen();
 //Other options are available.
 builder.Services.Configure<IdentityOptions>(options =>
 {
+    options.Lockout.AllowedForNewUsers = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
     //options.SignIn.RequireConfirmedEmail = true;
 });
 
