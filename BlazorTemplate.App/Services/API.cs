@@ -14,6 +14,10 @@ namespace BlazorTemplate.App.Services
     /// This is a library of all the external API calls. This promotes reusabilit of calls. 
     /// It also creates a standard way to parse responses and handle the 'loading spinner' when 
     /// waiting for a response.
+    /// Get, Post, Put all have a generic<T> version that will automatically parse results to the specified response object.
+    /// If you don't want to see the results, a boolean option is available that will just say t/f if it succeeded. 
+    /// Errors are not returned, but are displayed as toast messages. My preference is to handle errosr in a standard way, and handle them all here.
+    /// If you want error detauls, build them into your response object.
     /// </summary>
     public class API
     {
@@ -45,6 +49,9 @@ namespace BlazorTemplate.App.Services
             var response = await SendAsync(HttpMethod.Get, path, showSpinner);
             return await ParseErrors(response, isIdentityRequest, redirectOn404);
         }
+
+
+
         async public Task<T> PostAsync<T>(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Post, path, showSpinner, content);
@@ -59,6 +66,9 @@ namespace BlazorTemplate.App.Services
             var response = await SendAsync(HttpMethod.Post, path, showSpinner, content);
             return await ParseErrors(response, isIdentityRequest, redirectOn404);
         }
+
+
+
         async public Task<T> PutAsync<T>(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Put, path, showSpinner, content);
@@ -73,11 +83,16 @@ namespace BlazorTemplate.App.Services
             var response = await SendAsync(HttpMethod.Put, path, showSpinner, content);
             return await ParseErrors(response, isIdentityRequest, redirectOn404);
         }
+
+
+
         async public Task<bool> DeleteAsync(string path, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Delete, path, showSpinner);
             return await ParseErrors(response, isIdentityRequest, redirectOn404);
         } 
+
+
 
         private async Task<HttpResponseMessage> SendAsync(HttpMethod method, string path, bool showSpinner, object content = null)
         {
@@ -184,10 +199,9 @@ namespace BlazorTemplate.App.Services
                     return default(T);
                 }
             }
-            catch(Exception ex)
+            catch
             {
-                _toastService.ShowError($"API Parsing Error. Exception: {ex.Message} - {ex.StackTrace}");
-                // _toastService.ShowError("API Parsing Error.");
+                _toastService.ShowError("API Parsing Error.");
                 return default(T);
             }
         }
@@ -217,12 +231,9 @@ namespace BlazorTemplate.App.Services
 
                 return errors;
             }
-            catch(Exception ex)
+            catch
             {
-                string error = "Identity API Parsing Error.";
-                // _toastService.ShowError(error);
-                _toastService.ShowError($"{error} Exception: {ex.Message} - {ex.StackTrace}");
-                errors.Add(error);
+                _toastService.ShowError("Identity API Parsing Error.");
                 return errors;
             }
         }
@@ -250,9 +261,8 @@ namespace BlazorTemplate.App.Services
 
                 return errors;
             }
-            catch(Exception ex)
+            catch
             {
-               //Console.WriteLine($"API Parsing Login Error. Exception: {ex.Message} - {ex.StackTrace}");
                return errors;
             }
         }
