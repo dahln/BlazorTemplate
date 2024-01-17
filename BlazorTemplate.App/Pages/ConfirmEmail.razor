@@ -39,8 +39,8 @@
         if(!string.IsNullOrEmpty(ChangedEmail))
             path += $"&changedEmail={ChangedEmail}";
         
-        var response = await API.SendRequestAsync<string>(HttpMethod.Get, path);
-        if(response.Success)
+        var response = await API.GetAsync(path);
+        if(response)
             ConfirmationFinished = true;
         else
             _toastService.ShowError("Unable to verify email");

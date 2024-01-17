@@ -28,20 +28,13 @@ namespace BlazorTemplate.Identity
                     email,
                     password
                 };
-                var result = await API.SendRequestAsync(HttpMethod.Post,"register", content, true, true);
+                var result = await API.PostAsync("register", content, true, true);
 
                 // successful?
-                if (result.Success)
+                if (result)
                 {
                     return new FormResult { Succeeded = true };
                 }
-
-                // return the error list
-                return new FormResult
-                {
-                    Succeeded = false,
-                    ErrorList = result.Errors
-                };
             }
             catch { }
              
@@ -63,10 +56,10 @@ namespace BlazorTemplate.Identity
                     password
                 };
                 // login with cookies
-                var result = await API.SendRequestAsync(HttpMethod.Post, "login?useCookies=true", content, true, false, false);
+                var result = await API.PostAsync("login?useCookies=true", content, true, true, false);
 
                 // success?
-                if (result.Success)
+                if (result)
                 {
                     // need to refresh auth state
                     NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
@@ -74,17 +67,9 @@ namespace BlazorTemplate.Identity
                     // success!
                     return new FormResult { Succeeded = true };
                 }
-                else if(result.Errors.Any())
-                {
-                    //If Login errors are returned, show those, other wise use the default message.
-                    return new FormResult
-                    {
-                        Succeeded = false,
-                        ErrorList = result.Errors
-                    };
-                }                
             }
-            catch { }
+            catch { 
+            }
 
             // unknown error
             return new FormResult
@@ -112,21 +97,20 @@ namespace BlazorTemplate.Identity
             try
             {
                 // the user info endpoint is secured, so if the user isn't logged in this will fail
-                var userResponse = await API.SendRequestAsync<UserInfo>(HttpMethod.Get, "manage/info", null, false, false, false);
-
+                var userResponse = await API.GetAsync<UserInfo>("manage/info", false, false, false);
                 
-                if (userResponse.Success)
+                if (userResponse != null)
                 {
                     // in our system name and email are the same
                     var claims = new List<Claim>
                     {
-                        new(ClaimTypes.Name, userResponse.Data.Email),
-                        new(ClaimTypes.Email, userResponse.Data.Email)
+                        new(ClaimTypes.Name, userResponse.Email),
+                        new(ClaimTypes.Email, userResponse.Email)
                     };
 
                     // add any additional claims
                     claims.AddRange(
-                        userResponse.Data.Claims.Where(c => c.Key != ClaimTypes.Name && c.Key != ClaimTypes.Email)
+                        userResponse.Claims.Where(c => c.Key != ClaimTypes.Name && c.Key != ClaimTypes.Email)
                             .Select(c => new Claim(c.Key, c.Value)));
 
                     // set the principal
@@ -135,7 +119,9 @@ namespace BlazorTemplate.Identity
                     _authenticated = true;
                 }
             }
-            catch { }
+            catch { 
+
+            }
 
             // return the state
             return new AuthenticationState(user);
@@ -143,7 +129,7 @@ namespace BlazorTemplate.Identity
 
         public async Task LogoutAsync()
         {
-            await API.SendRequestAsync(HttpMethod.Post, "api/v1/account/logout", null);
+            await API.GetAsync("api/v1/account/logout");
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 

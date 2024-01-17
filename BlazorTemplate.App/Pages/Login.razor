@@ -72,8 +72,8 @@
     protected override async Task OnParametersSetAsync()
     {
         //Check if the server will allow 'All Operations', if NOT then do not show the password recovery or resend email confirmation.
-        var response = await API.SendRequestAsync<bool>(HttpMethod.Get, "api/v1/account/operations", null, false);
-        AllowAllOperations = response.Data;            
+        var response = await API.GetAsync<bool>("api/v1/account/operations", false);
+        AllowAllOperations = response;  
     }
 
     public async Task DoLoginAsync()

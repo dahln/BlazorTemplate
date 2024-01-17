@@ -44,15 +44,15 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var response = await API.SendRequestAsync<bool>(HttpMethod.Get, "api/v1/account/operations", null, false);
-        Disabled = response.Data == false ? true : false;
+        var response = await API.GetAsync<bool>("api/v1/account/operations", false);
+        Disabled = response == false ? true : false;
     }
 
     async public Task SendConfirmation()
     {
         Common.IdentityResendEmailConfirmation content = new Common.IdentityResendEmailConfirmation() { Email = Email };
-        var response = await API.SendRequestAsync<string>(HttpMethod.Post, "resendConfirmationEmail", content);
-        if(response.Success)
+        var response = await API.PostAsync("resendConfirmationEmail", content);
+        if(response)
         {
             _toastService.ShowSuccess("Done. Check your email for confirmation instructions.");
             Disabled = true;

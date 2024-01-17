@@ -210,11 +210,11 @@
         };
 
         await localStorage.SetItemAsync("CustomerSearch", Search);
-        var response = await API.SendRequestAsync<Common.SearchResponse<Common.Customer>>(HttpMethod.Post, $"api/v1/customers", Search);
-        if(response.Success)
+        var response = await API.PostAsync<Common.SearchResponse<Common.Customer>>($"api/v1/customers", Search);
+        if(response != null)
         {
-            Items = response.Data.Results;
-            TotalFound = response.Data.Total;
+            Items = response.Results;
+            TotalFound = response.Total;
         }
     }
 

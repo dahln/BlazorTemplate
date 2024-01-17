@@ -176,14 +176,9 @@
         {
             Locked = true;
             
-            var response = await API.SendRequestAsync<Common.Customer>(HttpMethod.Get, $"api/v1/customer/{Id}");
-            if(response.Success)
-                customer = response.Data;
-            else
-                foreach(var error in response.Errors)
-                {
-                    _toastService.ShowError(error);   
-                } 
+            customer = await API.GetAsync<Common.Customer>($"api/v1/customer/{Id}");
+            if(customer == null)
+                _toastService.ShowError("Customer failed to load");
         }
         else
         {
@@ -200,19 +195,13 @@
     {
         if (string.IsNullOrEmpty(Id))
         {
-            var response = await API.SendRequestAsync<string>(HttpMethod.Post, "api/v1/customer", customer);
-            if(response.Success == false)
-                foreach(var error in response.Errors)
-                {
-                    _toastService.ShowError(error);   
-                }
-            else
-                _navigationManager.NavigateTo($"customer/{response.Data}");
+            var response = await API.PostAsync<string>("api/v1/customer", customer);
+            _navigationManager.NavigateTo($"customer/{response}");
         }
         else if (!string.IsNullOrEmpty(Id))
         {
-            var response = await API.SendRequestAsync<string>(HttpMethod.Put, $"api/v1/customer/{Id}", customer);
-            if (response != null)
+            var response = await API.PutAsync($"api/v1/customer/{Id}", customer);
+            if (response)
             {
                 Locked = true;
             }
@@ -227,13 +216,8 @@
         if (modalResult.Cancelled) { }
         else
         {
-            var response = await API.SendRequestAsync<string>(HttpMethod.Delete, $"api/v1/customer/{Id}", customer);
-            if(response.Success == false)
-                foreach(var error in response.Errors)
-                {
-                    _toastService.ShowError(error);   
-                }
-            else
+            var response = await API.DeleteAsync($"api/v1/customer/{Id}");
+            if(response)
                 _navigationManager.NavigateTo($"customers");
         }
     }
@@ -241,14 +225,7 @@
     async private Task CancelChanges()
     {
         Locked = true;
-        var response = await API.SendRequestAsync<Common.Customer>(HttpMethod.Get, $"api/v1/customer/{Id}");
-        if(response.Success)
-            customer = response.Data;
-        else
-            foreach(var error in response.Errors)
-            {
-                _toastService.ShowError(error);   
-            }
+        customer = await API.GetAsync<Common.Customer>($"api/v1/customer/{Id}");
     }
 
     //Reading image bytes in browser may not be optimal in all situations. Adjust as needed.

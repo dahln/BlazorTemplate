@@ -10,19 +10,6 @@ using System.Text.Json;
 
 namespace BlazorTemplate.App.Services
 {
-    public class ApiResponse<T>
-    {
-        public T Data { get; set; }
-        public bool Success { get; set; }
-        public List<string> Errors { get; set; } = new List<string>();
-    }
-    public class ApiResponse
-    {
-        public bool Success { get; set; }
-        public List<string> Errors { get; set; } = new List<string>();
-    }
-
-
     /// <summary>
     /// This is a library of all the external API calls. This promotes reusabilit of calls. 
     /// It also creates a standard way to parse responses and handle the 'loading spinner' when 
@@ -42,9 +29,57 @@ namespace BlazorTemplate.App.Services
             _spinnerService = spinnerService;
             _toastService = toastService;
             _navigationManager = navigationManager;
-        }  
+        }
 
-        async public Task<ApiResponse> SendRequestAsync(HttpMethod method, string path, object content = null, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true)
+        async public Task<T> GetAsync<T>(string path, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
+        {
+            var response = await SendAsync(HttpMethod.Get, path, showSpinner);
+            var noErrors = await ParseErrors(response, isIdentityRequest, redirectOn404);
+            if(noErrors)
+                return await ParseResponse<T>(response);
+            else
+                return default(T);
+        }
+        async public Task<bool> GetAsync(string path, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
+        {
+            var response = await SendAsync(HttpMethod.Get, path, showSpinner);
+            return await ParseErrors(response, isIdentityRequest, redirectOn404);
+        }
+        async public Task<T> PostAsync<T>(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
+        {
+            var response = await SendAsync(HttpMethod.Post, path, showSpinner, content);
+            var noErrors = await ParseErrors(response, isIdentityRequest, redirectOn404);
+            if(noErrors)
+                return await ParseResponse<T>(response);
+            else
+                return default(T);
+        }
+        async public Task<bool> PostAsync(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
+        {
+            var response = await SendAsync(HttpMethod.Post, path, showSpinner, content);
+            return await ParseErrors(response, isIdentityRequest, redirectOn404);
+        }
+        async public Task<T> PutAsync<T>(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
+        {
+            var response = await SendAsync(HttpMethod.Put, path, showSpinner, content);
+            var noErrors = await ParseErrors(response, isIdentityRequest, redirectOn404);
+            if(noErrors)
+                return await ParseResponse<T>(response);
+            else
+                return default(T);
+        }
+        async public Task<bool> PutAsync(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
+        {
+            var response = await SendAsync(HttpMethod.Put, path, showSpinner, content);
+            return await ParseErrors(response, isIdentityRequest, redirectOn404);
+        }
+        async public Task<bool> DeleteAsync(string path, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
+        {
+            var response = await SendAsync(HttpMethod.Delete, path, showSpinner);
+            return await ParseErrors(response, isIdentityRequest, redirectOn404);
+        } 
+
+        private async Task<HttpResponseMessage> SendAsync(HttpMethod method, string path, bool showSpinner, object content = null)
         {
             if(showSpinner)
                 _spinnerService.Show();
@@ -52,7 +87,6 @@ namespace BlazorTemplate.App.Services
             var httpWebRequest = new HttpRequestMessage(method, path);
             httpWebRequest.Headers.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue() { NoCache = true };
 
-            //POST or PUT the context as json.
             if (content != null)
             {
                 string json = JsonConvert.SerializeObject(content);
@@ -61,93 +95,77 @@ namespace BlazorTemplate.App.Services
                 httpWebRequest.Content = postContent;
             }
 
-            //Send the request.
-            HttpResponseMessage response = await _httpClient.SendAsync(httpWebRequest);
-
-            //Prep the response object to return to the caller.
-            ApiResponse apiResponse = new Services.ApiResponse()
+            HttpResponseMessage response = new HttpResponseMessage()
             {
-                Success = response.IsSuccessStatusCode
+                StatusCode = System.Net.HttpStatusCode.BadRequest
             };
 
-            //If the response was a 401 unauthorized then reload the application and send the user to the Login page, unless they are already on the Login page.
-            if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
-            {
-                _navigationManager.NavigateTo("login", true);
-            }
-            else if(response.StatusCode == HttpStatusCode.Unauthorized && !redirectOn404)
-            {
-                //Login error:
-                apiResponse.Errors = await ParseIdentityLoginErrorsResponse(response);
-            }
-
-            //Parse the data for either success or errors.
-            if(response.IsSuccessStatusCode == false && isIdentityRequest)
-            {
-                var identityErrors = await ParseIdentityErrorsResponse(response);
-                apiResponse.Errors.AddRange(identityErrors);
-            }
-
+            response = await _httpClient.SendAsync(httpWebRequest);
+          
             if(showSpinner)
                 _spinnerService.Hide();
-
-            return apiResponse;
+           
+            return response;
         }
-        async public Task<ApiResponse<T>> SendRequestAsync<T>(HttpMethod method, string path, object content = null, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true)
+
+        private async Task<T> ParseResponse<T>(HttpResponseMessage response)
         {
-            if(showSpinner)
-                _spinnerService.Show();
-
-            var httpWebRequest = new HttpRequestMessage(method, path);
-            httpWebRequest.Headers.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue() { NoCache = true };
-
-            //POST or PUT the context as json.
-            if (content != null)
-            {
-                string json = JsonConvert.SerializeObject(content);
-                StringContent postContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
-
-                httpWebRequest.Content = postContent;
-            }
-
-            //Send the request.
-            HttpResponseMessage response = await _httpClient.SendAsync(httpWebRequest);
-
-            //Prep the response object to return to the caller.
-            ApiResponse<T> apiResponse = new Services.ApiResponse<T>()
-            {
-                Success = response.IsSuccessStatusCode
-            };
-
-            //If the response was a 401 unauthorized then reload the application and send the user to the Login page, unless they are already on the Login page.
-            if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
-            {
-                _navigationManager.NavigateTo("login", true);
-            }
-            else if(response.StatusCode == HttpStatusCode.Unauthorized && !redirectOn404)
-            {
-                //Login error:
-                apiResponse.Errors = await ParseIdentityLoginErrorsResponse(response);
-            }
-
             //Parse the data for either success or errors.
             if(response.IsSuccessStatusCode)
             {
-                apiResponse.Data = await ParseResponseObject<T>(response);
-            }
-            else if(response.IsSuccessStatusCode == false && isIdentityRequest)
-            {
-                var identityErrors = await ParseIdentityErrorsResponse(response);
-                apiResponse.Errors.AddRange(identityErrors);
+                return await ParseResponseObject<T>(response);
             }
 
-            if(showSpinner)
-                _spinnerService.Hide();
-
-            return apiResponse;
+            return default(T);
         }
 
-        public async Task<T> ParseResponseObject<T>(HttpResponseMessage response)
+        /// <summary>
+        /// False means it failed because of errors. True means no errors and it succeeded. 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="isIdentityRequest"></param>
+        /// <param name="redirectOn404"></param>
+        /// <returns></returns>
+        private async Task<bool> ParseErrors(HttpResponseMessage response, bool isIdentityRequest = false, bool redirectOn404 = true)
+        {
+            if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
+            {
+                _navigationManager.NavigateTo("login", true);
+            }
+            
+            //Parse the data for either success or errors.
+            if(response.StatusCode == HttpStatusCode.Unauthorized && isIdentityRequest && !redirectOn404)
+            {
+                var errorsIdentity = await ParseIdentityLoginErrorsResponse(response);
+                foreach(var error in errorsIdentity) 
+                {
+                    _toastService.ShowError(error);
+                }
+                return false;
+            }
+            else if(response.IsSuccessStatusCode == false && isIdentityRequest == false)
+            {
+                string errorResponse = await response.Content.ReadAsStringAsync();
+                if (!string.IsNullOrEmpty(errorResponse))
+                {
+                    _toastService.ShowError(errorResponse);
+                }
+                return false;
+            }
+            else if(response.IsSuccessStatusCode == false && isIdentityRequest == true)
+            {
+                var errorsIdentity = await ParseIdentityErrorsResponse(response);
+                foreach(var error in errorsIdentity) 
+                {
+                    _toastService.ShowError(error);
+                }
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<T> ParseResponseObject<T>(HttpResponseMessage response)
         {
             try
             {

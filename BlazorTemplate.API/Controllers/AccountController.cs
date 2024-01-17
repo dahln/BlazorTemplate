@@ -30,9 +30,8 @@ namespace BlazorTemplate.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [Authorize]
-        [HttpPost]
+        [HttpGet]
         [Route("api/v1/account/logout")]
-        [ProducesResponseType<bool>(StatusCodes.Status200OK)]
         async public Task<IActionResult> AccountLogout()
         {
             await _signInManager.SignOutAsync();
