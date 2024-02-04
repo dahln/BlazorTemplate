@@ -18,6 +18,9 @@ namespace BlazorTemplate.App.Services
     /// If you don't want to see the results, a boolean option is available that will just say t/f if it succeeded. 
     /// Errors are not returned, but are displayed as toast messages. My preference is to handle errosr in a standard way, and handle them all here.
     /// If you want error detauls, build them into your response object.
+    /// 
+    /// This API library is not required. 
+    /// The 'HTTPClient' used in this API library is injected, and can be used without this library by simply injecting it into the component you want.
     /// </summary>
     public class API
     {

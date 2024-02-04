@@ -2,7 +2,7 @@
     <CascadingBlazoredModal Position="ModalPosition.Middle">
         <Router AppAssembly="@typeof(App).Assembly">
             <Found Context="routeData">
-                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Shared.MainLayout)">
                     <NotAuthorized>
                         <RedirectToLogin />
                     </NotAuthorized>
