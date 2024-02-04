@@ -1,10 +1,3 @@
-[![CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/master_blazortemplateapi.yml)
-
-## Demo
-[https://template.dahln.com](https://template.dahln.com)
-
-This is a fully functional demo. If this template was helpful to you, please consider supporting this project by donating.
-
 ## What & Why
 This project is an example of one way to build a .NET Web application, using Blazor, Web API, and SQL. Demonstrating simple CRUD & Search operations, protected by Authentication/Authorization. This is an active application that I continue to update as .NET is updated and expanded. I created this template because the stock templates from Microsoft do not offer all the functionality I want in a template.
 
