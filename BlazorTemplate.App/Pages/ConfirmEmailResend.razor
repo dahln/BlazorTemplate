@@ -50,7 +50,7 @@
 
     async public Task SendConfirmation()
     {
-        Common.IdentityResendEmailConfirmation content = new Common.IdentityResendEmailConfirmation() { Email = Email };
+        Common.AccountEmail content = new Common.AccountEmail() { Email = Email };
         var response = await API.PostAsync("resendConfirmationEmail", content);
         if(response)
         {

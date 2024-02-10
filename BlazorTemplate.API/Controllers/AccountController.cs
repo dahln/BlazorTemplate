@@ -93,6 +93,18 @@ namespace BlazorTemplate.API.Controllers
 
             return Ok(allowAllOperations);
         }
+
+
+        [HttpGet]
+        [Route("api/v1/account/2fa")]
+        [ProducesResponseType<bool>(StatusCodes.Status200OK)]
+        public async Task<IActionResult> AccountTwoFactorEnabled()
+        {
+            string userId = User.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+            var isTwoFactorEnabled = await _userManager.GetTwoFactorEnabledAsync(user);
+            return Ok(isTwoFactorEnabled);
+        }
         
     }
 }

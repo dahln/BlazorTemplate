@@ -1,7 +1,9 @@
 ﻿@page "/login"
 @using BlazorTemplate.Identity
+@using BlazorTemplate.Common
 @inject IAccountManagement Acct
 @inject BlazorTemplate.App.Services.API API
+@inject IToastService _toastService
 
 
 <AuthorizeView>
@@ -39,19 +41,63 @@
                                 <input required id="password" name="passwordInput" placeholder="Enter your password" type="password" @bind-value="password" class="form-control" />
                             </div>
                         </div>
+                        @if(TwoFactorPrompt)
+                        {
+                        <div class="row mt-1">
+                            <div class="col-md-6">
+                                <label for="password">
+                                    Security Code:
+                                </label>
+                                <input id="twoFactor" placeholder="6-digit code" type="text" @bind-value="TwoFactorCode" class="form-control" />
+                            </div>
+                        </div>
+                        
                         <div class="row mt-2">
+                            <div class="col-md-12">
+                                <label for="password">
+                                    Remember this device for 14 days
+                                </label>
+                                <input type="checkbox" @bind="TwoFactorRememberMe" />
+                            </div>
+                        </div>
+                        }
+                        @if(TwoFactorRecoveryPrompt)
+                        {
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label for="password">
+                                    Enter one of the security codes provided to you when you setup Two Factor Authentication:
+                                </label>
+                                <input id="twoFactorRecovery" placeholder="Enter your 2FA Recovery Code" type="text" @bind-value="TwoFactorRecoveryCode" class="form-control" />
+                            </div>
+                        </div>
+                        }
+                        <div class="row mt-4">
                             <div class="col-md-12">
                                 <button @onclick="DoLoginAsync" class="btn btn-primary">Login</button>
                             </div>
                         </div>
+                        
                         @if(AllowAllOperations)
                         {
                         <div class="row mt-3">
-                            <a href="password/forgot">Forgot Password</a>
+                            <div class="col-md-12">
+                                <a href="password/forgot">Forgot Password</a>
+                            </div>
                         </div>
                         
                         <div class="row mt-3">
-                            <a href="confirmEmailResend">Resend Email Confirmation</a>
+                            <div class="col-md-12">
+                                <a href="confirmEmailResend">Resend Email Confirmation</a>
+                            </div>
+                        </div>
+                        }
+                        @if(TwoFactorPrompt)
+                        {
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="btn btn-link btn-override" @onclick="ShowTwoFactorRecovery">Security Code Recovery</div>
+                            </div>
                         </div>
                         }
                     </div>
@@ -68,6 +114,11 @@
     private string password = string.Empty;
     private List<string> errorList { get; set; } = new List<string>();
     private bool AllowAllOperations { get; set; } = false;
+    private string TwoFactorCode { get; set; }
+    private string TwoFactorRecoveryCode { get; set; }
+    private bool TwoFactorRememberMe { get; set; } = false;
+    private bool TwoFactorPrompt { get; set; } = false;
+    private bool TwoFactorRecoveryPrompt { get; set; } = false;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -95,12 +146,35 @@
             return;
         }
 
-        var result = await Acct.LoginAsync(email!, password!);
+        var result = await Acct.LoginAsync(email!, password!, TwoFactorCode, TwoFactorRecoveryCode);
 
-        if (result.Succeeded)
+        if(result.Prompt2FA && !TwoFactorRecoveryPrompt)
+        {
+            TwoFactorCode = null;
+            TwoFactorRecoveryCode = null;
+            TwoFactorPrompt = true;
+            _toastService.ShowInfo("Enter your security code.");
+        }
+        else if(result.Prompt2FA && TwoFactorRecoveryPrompt)
+        {
+            TwoFactorCode = null;
+            TwoFactorRecoveryCode = null;
+            TwoFactorRecoveryPrompt = true;
+            _toastService.ShowInfo("Enter your security recovery code.");
+        }
+        else if (result.Succeeded)
         {
             success = true;
             email = password = string.Empty;
+
+            if(TwoFactorRememberMe == false && TwoFactorPrompt)
+            {
+                var temp = new  
+                {
+                    ForgetMachine = true
+                };
+                var response = await API.PostAsync<IdentityManage2faResponse>("/manage/2fa", temp, true, true, true);
+            }
         }
         else
         {
@@ -156,5 +230,11 @@
             errors = true;
             errorList = result.ErrorList;
         }
+    }
+
+    private void ShowTwoFactorRecovery()
+    {
+        TwoFactorRecoveryPrompt = true;
+        TwoFactorPrompt = false;
     }
 }

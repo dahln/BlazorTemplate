@@ -29,6 +29,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromDays(1));
+
 //Identity options. Uncomment this to required email confirmation before allowing sign in.
 //Other options are available.
 builder.Services.Configure<IdentityOptions>(options =>

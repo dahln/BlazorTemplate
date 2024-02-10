@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Net.Http.Json;
 using BlazorTemplate.Identity.Models;
 using BlazorTemplate.App.Services;
+using BlazorTemplate.Common;
+using Newtonsoft.Json;
 
 namespace BlazorTemplate.Identity
 {
@@ -46,20 +48,22 @@ namespace BlazorTemplate.Identity
             };
         }
 
-        public async Task<FormResult> LoginAsync(string email, string password)
+        public async Task<FormResult> LoginAsync(string email, string password, string? twoFactorCode, string? twoFactorRecoveryCode)
         {
             try
             {
                 var content = new
                 {
                     email,
-                    password
+                    password, 
+                    twoFactorCode,
+                    twoFactorRecoveryCode
                 };
                 // login with cookies
-                var result = await API.PostAsync("login?useCookies=true", content, true, true, false);
+                var result = await API.LoginPostAsync("login?useCookies=true", content);
 
                 // success?
-                if (result)
+                if (result == null)
                 {
                     // need to refresh auth state
                     NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
@@ -67,6 +71,16 @@ namespace BlazorTemplate.Identity
                     // success!
                     return new FormResult { Succeeded = true };
                 }
+                else if(result.Detail == "RequiresTwoFactor")
+                {
+                     // unknown error
+                    return new FormResult
+                    {
+                        Succeeded = false,
+                        Prompt2FA = true
+                    };
+                }
+                // else if(!result)
             }
             catch { 
             }

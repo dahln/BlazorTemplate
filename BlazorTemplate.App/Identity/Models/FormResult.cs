@@ -14,5 +14,7 @@
         /// On failure, the problem details are parsed and returned in this array.
         /// </summary>
         public List<string> ErrorList { get; set; } = new List<string>();
+
+        public bool Prompt2FA { get; set; }
     }
 }
