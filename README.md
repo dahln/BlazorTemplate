@@ -8,7 +8,7 @@ Some of the page and components in the WASM client app are copied from or derive
 ## Demo
 [https://demo.dahln.com/](https://demo.dahln.com/)
 
-My preferred method of hosting is to us an Azure App Service. This template uses Sqlite for the database. In my experience Sqlite doesn't perform reliably in an Azure App Service. This demo is hosted on an Ubuntu server. You can review the CI/CD action for ideas on deploying to a Linux server instead of an App Service. Feel free to reach out if you have questions for setting up the server. 
+My preferred method of hosting is to use an Azure App Service. This template uses Sqlite for the database. In my experience Sqlite doesn't perform reliably on an Azure App Service. This demo is hosted on an Ubuntu server. You can review the CI/CD action for ideas on deploying to a Linux server instead of an App Service. Feel free to reach out if you have questions for setting up a server. 
 
 ## Technologies
  - .NET 8 & C#
