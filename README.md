@@ -8,6 +8,8 @@ Some of the page and components in the WASM client app are copied from or derive
 ## Demo
 [https://demo.dahln.com/](https://demo.dahln.com/)
 
+My preferred method of hosting is to us an Azure App Service. This template uses Sqlite for the database. In my experience Sqlite doesn't perform reliably in an Azure App Service. This demo is hosted on an Ubuntu server. You can review the CI/CD action for ideas on deploying to a Linux server instead of an App Service. Feel free to reach out if you have questions for setting up the server. 
+
 ## Technologies
  - .NET 8 & C#
  - Web API
@@ -15,7 +17,7 @@ Some of the page and components in the WASM client app are copied from or derive
  - Web API
  - SQL
  - Identity API
- - Identity API 2FA - Comming Soon
+ - Identity API 2FA
  - GitHub Actions
  - [Blazored Libraries (Toast, LocalStorage, Modal)](https://github.com/Blazored)
  - [Bootstrap CDN (Bootstrap and Boostrap Icons)](https://getbootstrap.com/)
@@ -45,11 +47,11 @@ There are tools to handle API versioning. Add which ever tools you prefer. This 
 2. It is easy to customize and supported by Microsoft.
 3. It allows for 100% control of your user data and authentication/authorization process. There are other Authentication options such as Azure B2C/Entra and Auth0.
 
-## Why SQLite?
-It runs on Windows and Linux. It is great for this template. Depending on your projects needs, it may work for production. If you need more than SQLite offers then I recommend switching to Azure SQL. If you switch to Azure SQL, besure to delete your SQLite DB migrations and create new a 'Initial Migration' for your new Azure SQL DB.
-
 ## [SendGrid](https://sendgrid.com/en-us/pricing)
 This project uses SendGrid to send emails. A SendGrid API key is required. The demo has a key configured, but that value/key is not checked into the Repo. You will need to specify your own SendGrid API key and system email address. Some features that require email are not available until you provide the necessary SendGrid values. It is a simple process to create your own SendGrid account and retreive your API key.
+
+## Why SQLite?
+It runs on Windows and Linux. It is great for this template. Depending on your projects needs, it may work for production. If you need more than SQLite offers then I recommend switching to Azure SQL. If you switch to Azure SQL, besure to delete your SQLite DB migrations and create new a 'Initial Migration' for your new Azure SQL DB.
 
 ## DB Migrations
 This project includes the necessary "Initial Creation" DB migration, used for the initial creation of a DB when the application connects to the DB for the first time. The Program.cs in the API project will automatically check for DB migrations which need to run, and run them automatically. You can run the DB migrations manually if desired. The commands below outline how to generate a DB migration and run a migration.
@@ -76,10 +78,6 @@ Sensative configuration data, such as the DB connection strings, are kept in the
  git update-index --no-assume-unchanged .\BlazorTemplate.API\appsettings.json
  ```
 
-## Setup CI/CD
-Most applications need to be build and deployed. Outlined here are steps to setup automatted build and deployments (CI/CD)
-1. [Microsoft outlines how to use Azure App Service Deployment Center to setup CI/CD with GitHub Actions](https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#use-the-deployment-center). 
-2. This project is a ["Hosted Blazor"](https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-8.0#hosted-deployment-with-aspnet-core) application. When I deployed this application, I found that it wouldn't startup automatically. The default yaml workflow file, created by Azure, builds and publishes all projects in the solution. The consequence of this is that multiple .runtimeconfig files are created. Specifying that the build and publish should build the 'Server' project solves this issue. As a result, no special startup commands are necessary.
 
 ## Licensing
 This project uses the 'Unlicense'.  It is a simple license - review it at your own leisure.
