@@ -3,6 +3,9 @@ This project is an example of one way to build a .NET Web application, using Bla
 
 Some of the page and components in the WASM client app are copied from or derived from the stock Microsoft templates, for example login and register.
 
+## Demo
+[https://demo.dahln.com/](https://demo.dahln.com/)
+
 ## Technologies
  - .NET 8 & C#
  - Web API
