@@ -1,0 +1,31 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build, publish, and deploy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+          dotnet publish BlazorTemplate.API -c Release 
+          sshpass -p ${{ secrets.SERVERPASSWORD }} scp -o StrictHostKeyChecking=no -P ${{secrets.SERVERPORT}} -r ${{ github.workspace }}/BlazorTemplate.API/bin/Release/net8.0/publish/* ${{secrets.SERVERUSERNAME}}@${{secrets.SERVERADDRESS}}:/var/www/BlazorTemplate      
+          sshpass -p ${{ secrets.SERVERPASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVERPORT }} ${{ secrets.SERVERUSERNAME }}@${{ secrets.SERVERADDRESS }} "sudo systemctl restart kestrel-BlazorTemplate.service"
+          sshpass -p ${{ secrets.SERVERPASSWORD }} ssh -o StrictHostKeyChecking=no -p ${{ secrets.SERVERPORT }} ${{ secrets.SERVERUSERNAME }}@${{ secrets.SERVERADDRESS }} "sudo systemctl restart nginx"
