@@ -1,3 +1,5 @@
+[![CI/CD](https://github.com/dahln/BlazorTemplate/actions/workflows/dotnet-build-deploy.yml/badge.svg)](https://github.com/dahln/BlazorTemplate/actions/workflows/dotnet-build-deploy.yml)
+
 ## What & Why
 This project is an example of one way to build a .NET Web application, using Blazor, Web API, and SQL. Demonstrating simple CRUD & Search operations, protected by Authentication/Authorization. This is an active application that I continue to update as .NET is updated and expanded. I created this template because the stock templates from Microsoft do not offer all the functionality I want in a template.
 
