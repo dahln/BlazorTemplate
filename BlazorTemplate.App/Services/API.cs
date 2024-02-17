@@ -67,6 +67,13 @@ namespace BlazorTemplate.App.Services
             var response = await SendAsync(HttpMethod.Post, path, showSpinner, content);
             return await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
         }
+
+        /// <summary>
+        /// Login 'POST' has a unique response. It was easier to create a dedicated login API method.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="content"></param>
+        /// <returns></returns>
         async public Task<LoginResponse> LoginPostAsync(string path, object content) 
         {
             var response = await SendAsync(HttpMethod.Post, path, true, content);
