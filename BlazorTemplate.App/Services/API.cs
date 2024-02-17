@@ -11,13 +11,11 @@ using System.Text.Json;
 namespace BlazorTemplate.App.Services
 {
     /// <summary>
-    /// This is a library of all the external API calls. This promotes reusabilit of calls. 
-    /// It also creates a standard way to parse responses and handle the 'loading spinner' when 
-    /// waiting for a response.
-    /// Get, Post, Put all have a generic<T> version that will automatically parse results to the specified response object.
-    /// If you don't want to see the results, a boolean option is available that will just say t/f if it succeeded. 
-    /// Errors are not returned, but are displayed as toast messages. My preference is to handle errosr in a standard way, and handle them all here.
-    /// If you want error detauls, build them into your response object.
+    /// This 'API Library' supplements the HttpClient.
+    /// 
+    /// It wraps all calls with a 'Loading Spinner'
+    /// It parses results
+    /// It shows toast errors OR returns the results.
     /// 
     /// This API library is not required. 
     /// The 'HTTPClient' used in this API library is injected, and can be used without this library by simply injecting it into the component you want.
