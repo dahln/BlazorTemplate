@@ -185,19 +185,19 @@ namespace BlazorTemplate.App.Services
             
             if(response.IsSuccessStatusCode == false && isIdentityRequest == false)
             {
-                string error = await ParseError(response);
+                string error = await ParseResponseError(response);
                 DisplayErrorAsToast(error);
                 return false;
             }
             else if(response.StatusCode == HttpStatusCode.Unauthorized && isIdentityRequest && !redirectOn404)
             {
-                var errors = await ParseIdentityLoginError(response);
+                var errors = await ParseIdentityLoginResponseError(response);
                 DisplayErrorAsToast(errors);
                 return false;
             }
             else if(response.IsSuccessStatusCode == false && isIdentityRequest == true)
             {
-                var errors = await ParseIdentityError(response);
+                var errors = await ParseIdentityResponseError(response);
                 DisplayErrorAsToast(errors);
                 return false;
             }
@@ -216,29 +216,30 @@ namespace BlazorTemplate.App.Services
             
             if(response.IsSuccessStatusCode == false && isIdentityRequest == false)
             {
-                string error = await ParseError(response);
+                string error = await ParseResponseError(response);
                 allErrors.Add(error);
             }
             else if(response.StatusCode == HttpStatusCode.Unauthorized && isIdentityRequest && !redirectOn404)
             {
-                var errors = await ParseIdentityLoginError(response);
+                var errors = await ParseIdentityLoginResponseError(response);
                 allErrors.AddRange(errors);
             }
             else if(response.IsSuccessStatusCode == false && isIdentityRequest == true)
             {
-                var errors = await ParseIdentityError(response);
+                var errors = await ParseIdentityResponseError(response);
                 allErrors.AddRange(errors);
             }
 
             return allErrors;
         }
 
-        private async Task<string> ParseError(HttpResponseMessage response)
+        private async Task<string> ParseResponseError(HttpResponseMessage response)
         {
             string errorResponse = await response.Content.ReadAsStringAsync();
             return errorResponse;
         }
-        private async Task<List<string>> ParseIdentityError(HttpResponseMessage response)
+        
+        private async Task<List<string>> ParseIdentityResponseError(HttpResponseMessage response)
         {
             //Parsing errors from Identity API
             var errors = new List<string>();
@@ -269,7 +270,8 @@ namespace BlazorTemplate.App.Services
                 return errors;
             }
         }
-        private async Task<List<string>> ParseIdentityLoginError(HttpResponseMessage response)
+
+        private async Task<List<string>> ParseIdentityLoginResponseError(HttpResponseMessage response)
         {
             var errors = new List<string>();
             try
@@ -292,10 +294,12 @@ namespace BlazorTemplate.App.Services
                 return errors;
             }
         }
+
         private void DisplayErrorAsToast(string error)
         {
             _toastService.ShowError(error);
         }
+
         private void DisplayErrorAsToast(List<string> errors)
         {
             foreach(var error in errors) 

@@ -111,7 +111,7 @@ namespace BlazorTemplate.Identity
             try
             {
                 // the user info endpoint is secured, so if the user isn't logged in this will fail
-                var userResponse = await API.GetAsync<UserInfo>("manage/info", false, false, false);
+                var userResponse = await API.GetAsync<UserInfo>("manage/info", false, true, false);
                 
                 if (userResponse != null)
                 {
