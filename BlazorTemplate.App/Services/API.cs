@@ -191,7 +191,8 @@ namespace BlazorTemplate.App.Services
             if(response.IsSuccessStatusCode == false && isIdentityRequest == false)
             {
                 string error = await ParseResponseError(response);
-                DisplayErrorAsToast(error);
+                if(!string.IsNullOrEmpty(error))
+                    DisplayErrorAsToast(error);
                 return false;
             }
             else if(response.StatusCode == HttpStatusCode.Unauthorized && isIdentityRequest && !redirectOn404)
