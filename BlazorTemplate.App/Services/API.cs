@@ -68,24 +68,6 @@ namespace BlazorTemplate.App.Services
             return await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
         }
 
-        /// <summary>
-        /// Login 'POST' has a unique response. It was easier to create a dedicated login API method.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="content"></param>
-        /// <returns></returns>
-        async public Task<LoginResponse> LoginPostAsync(string path, object content) 
-        {
-            var response = await SendAsync(HttpMethod.Post, path, true, content);
-            if(response.IsSuccessStatusCode == false)
-            {
-                string contents = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<LoginResponse>(contents);
-            }
-            return default(LoginResponse);
-        }
-
-
 
         async public Task<T> PutAsync<T>(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
@@ -112,7 +94,7 @@ namespace BlazorTemplate.App.Services
 
 
 
-        private async Task<HttpResponseMessage> SendAsync(HttpMethod method, string path, bool showSpinner, object content = null)
+        public async Task<HttpResponseMessage> SendAsync(HttpMethod method, string path, bool showSpinner, object content = null)
         {
             if(showSpinner)
                 _spinnerService.Show();
@@ -141,7 +123,7 @@ namespace BlazorTemplate.App.Services
             return response;
         }
 
-        private async Task<T> ParseResponse<T>(HttpResponseMessage response)
+        public async Task<T> ParseResponse<T>(HttpResponseMessage response)
         {
             //Parse the data for either success or errors.
             if(response.IsSuccessStatusCode)
@@ -180,7 +162,7 @@ namespace BlazorTemplate.App.Services
         /// <param name="isIdentityRequest"></param>
         /// <param name="redirectOn404"></param>
         /// <returns></returns>
-        private async Task<bool> ParseErrorsDisplayAsToast(HttpResponseMessage response, bool isIdentityRequest = false, bool redirectOn404 = true)
+        public async Task<bool> ParseErrorsDisplayAsToast(HttpResponseMessage response, bool isIdentityRequest = false, bool redirectOn404 = true)
         {
             //If the respone is unauthorized, redirect back to the login page
             if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
@@ -211,7 +193,7 @@ namespace BlazorTemplate.App.Services
             return true;
         }
 
-        private async Task<List<string>> ParseErrors(HttpResponseMessage response, bool isIdentityRequest = false, bool redirectOn404 = true)
+        public async Task<List<string>> ParseErrors(HttpResponseMessage response, bool isIdentityRequest = false, bool redirectOn404 = true)
         {
             List<string> allErrors = new List<string>();
             //If the respone is unauthorized, redirect back to the login page
@@ -239,13 +221,13 @@ namespace BlazorTemplate.App.Services
             return allErrors;
         }
 
-        private async Task<string> ParseResponseError(HttpResponseMessage response)
+        public async Task<string> ParseResponseError(HttpResponseMessage response)
         {
             string errorResponse = await response.Content.ReadAsStringAsync();
             return errorResponse;
         }
         
-        private async Task<List<string>> ParseIdentityResponseError(HttpResponseMessage response)
+        public async Task<List<string>> ParseIdentityResponseError(HttpResponseMessage response)
         {
             //Parsing errors from Identity API
             var errors = new List<string>();
@@ -277,7 +259,7 @@ namespace BlazorTemplate.App.Services
             }
         }
 
-        private async Task<List<string>> ParseIdentityLoginResponseError(HttpResponseMessage response)
+        public async Task<List<string>> ParseIdentityLoginResponseError(HttpResponseMessage response)
         {
             var errors = new List<string>();
             try
@@ -301,12 +283,12 @@ namespace BlazorTemplate.App.Services
             }
         }
 
-        private void DisplayErrorAsToast(string error)
+        public void DisplayErrorAsToast(string error)
         {
             _toastService.ShowError(error);
         }
 
-        private void DisplayErrorAsToast(List<string> errors)
+        public void DisplayErrorAsToast(List<string> errors)
         {
             foreach(var error in errors) 
             {

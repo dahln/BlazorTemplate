@@ -59,11 +59,9 @@ namespace BlazorTemplate.Identity
                     twoFactorCode,
                     twoFactorRecoveryCode
                 };
-                // login with cookies
-                var result = await API.LoginPostAsync("login?useCookies=true", content);
-
-                // success?
-                if (result == null)
+                
+                var response = await API.SendAsync(HttpMethod.Post, "login?useCookies=true", true, content);
+                if(response.IsSuccessStatusCode)
                 {
                     // need to refresh auth state
                     NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
@@ -71,16 +69,20 @@ namespace BlazorTemplate.Identity
                     // success!
                     return new FormResult { Succeeded = true };
                 }
-                else if(result.Detail == "RequiresTwoFactor")
+                else if(response.IsSuccessStatusCode == false)
                 {
-                     // unknown error
-                    return new FormResult
+                    string contents = await response.Content.ReadAsStringAsync();
+                    var error = JsonConvert.DeserializeObject<LoginResponse>(contents);
+
+                    if(error.Detail == "RequiresTwoFactor")
                     {
-                        Succeeded = false,
-                        Prompt2FA = true
-                    };
+                        return new FormResult
+                        {
+                            Succeeded = false,
+                            Prompt2FA = true
+                        };
+                    }
                 }
-                // else if(!result)
             }
             catch { 
             }
