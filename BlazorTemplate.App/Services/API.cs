@@ -41,7 +41,7 @@ namespace BlazorTemplate.App.Services
         async public Task<T> GetAsync<T>(string path, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Get, path, showSpinner);
-            var noErrors = await ParseErrors(response, isIdentityRequest, redirectOn404);
+            var noErrors = await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
             if(noErrors)
                 return await ParseResponse<T>(response);
             else
@@ -50,7 +50,7 @@ namespace BlazorTemplate.App.Services
         async public Task<bool> GetAsync(string path, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Get, path, showSpinner);
-            return await ParseErrors(response, isIdentityRequest, redirectOn404);
+            return await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
         }
 
 
@@ -58,7 +58,7 @@ namespace BlazorTemplate.App.Services
         async public Task<T> PostAsync<T>(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Post, path, showSpinner, content);
-            var noErrors = await ParseErrors(response, isIdentityRequest, redirectOn404);
+            var noErrors = await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
             if(noErrors)
                 return await ParseResponse<T>(response);
             else
@@ -67,7 +67,7 @@ namespace BlazorTemplate.App.Services
         async public Task<bool> PostAsync(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Post, path, showSpinner, content);
-            return await ParseErrors(response, isIdentityRequest, redirectOn404);
+            return await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
         }
         async public Task<LoginResponse> LoginPostAsync(string path, object content) 
         {
@@ -85,7 +85,7 @@ namespace BlazorTemplate.App.Services
         async public Task<T> PutAsync<T>(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Put, path, showSpinner, content);
-            var noErrors = await ParseErrors(response, isIdentityRequest, redirectOn404);
+            var noErrors = await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
             if(noErrors)
                 return await ParseResponse<T>(response);
             else
@@ -94,7 +94,7 @@ namespace BlazorTemplate.App.Services
         async public Task<bool> PutAsync(string path, object content, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Put, path, showSpinner, content);
-            return await ParseErrors(response, isIdentityRequest, redirectOn404);
+            return await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
         }
 
 
@@ -102,7 +102,7 @@ namespace BlazorTemplate.App.Services
         async public Task<bool> DeleteAsync(string path, bool showSpinner = true, bool isIdentityRequest = false, bool redirectOn404 = true) 
         {
             var response = await SendAsync(HttpMethod.Delete, path, showSpinner);
-            return await ParseErrors(response, isIdentityRequest, redirectOn404);
+            return await ParseErrorsDisplayAsToast(response, isIdentityRequest, redirectOn404);
         } 
 
 
@@ -160,7 +160,7 @@ namespace BlazorTemplate.App.Services
                 }
                 catch
                 {
-                    _toastService.ShowError("API Parsing Error.");
+                    Console.WriteLine("API Parsing Error.");
                     return default(T);
                 }
             }
@@ -175,7 +175,7 @@ namespace BlazorTemplate.App.Services
         /// <param name="isIdentityRequest"></param>
         /// <param name="redirectOn404"></param>
         /// <returns></returns>
-        private async Task<bool> ParseErrors(HttpResponseMessage response, bool isIdentityRequest = false, bool redirectOn404 = true)
+        private async Task<bool> ParseErrorsDisplayAsToast(HttpResponseMessage response, bool isIdentityRequest = false, bool redirectOn404 = true)
         {
             //If the respone is unauthorized, redirect back to the login page
             if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
@@ -185,85 +185,123 @@ namespace BlazorTemplate.App.Services
             
             if(response.IsSuccessStatusCode == false && isIdentityRequest == false)
             {
-                //Parsing regular (non-Identity) API errors
-                string errorResponse = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(errorResponse))
-                {
-                    _toastService.ShowError(errorResponse);
-                }
+                string error = await ParseError(response);
+                DisplayErrorAsToast(error);
                 return false;
             }
             else if(response.StatusCode == HttpStatusCode.Unauthorized && isIdentityRequest && !redirectOn404)
             {
-                //Prasing identity Login Errors
-                var errorsIdentity = new List<string>();
-                try
-                {
-                    //Login error:
-                    var details = await response.Content.ReadAsStringAsync();
-                    Newtonsoft.Json.Linq.JObject jsonObject = Newtonsoft.Json.Linq.JObject.Parse(details);
-                    string detailValue = (string)jsonObject["detail"];
-                    if(!string.IsNullOrEmpty(detailValue))
-                        errorsIdentity.Add(detailValue);
-
-                    //Don't want this error. It simply means incorrect username/password.
-                    errorsIdentity = errorsIdentity.Where(x => x != "Failed").ToList();
-                }
-                catch
-                {
-                    _toastService.ShowError("Error Processing Login Request");
-                    return false;
-                }
-
-                //Show the errors as toast
-                foreach(var error in errorsIdentity) 
-                {
-                    _toastService.ShowError(error);
-                }
+                var errors = await ParseIdentityLoginError(response);
+                DisplayErrorAsToast(errors);
                 return false;
             }
-            
             else if(response.IsSuccessStatusCode == false && isIdentityRequest == true)
             {
-                //Parsing errors from Identity API
-                var errorsIdentity = new List<string>();
-                try
-                {
-                    var details = await response.Content.ReadAsStringAsync();
-                    var problemDetails = JsonDocument.Parse(details);
-                    var errorList = problemDetails.RootElement.GetProperty("errors");
-                    foreach (var errorEntry in errorList.EnumerateObject())
-                    {
-                        if (errorEntry.Value.ValueKind == JsonValueKind.String)
-                        {
-                            errorsIdentity.Add(errorEntry.Value.GetString()!);
-                        }
-                        else if (errorEntry.Value.ValueKind == JsonValueKind.Array)
-                        {
-                            errorsIdentity.AddRange(
-                                errorEntry.Value.EnumerateArray().Select(
-                                    e => e.GetString() ?? string.Empty)
-                                .Where(e => !string.IsNullOrEmpty(e)));
-                        }
-                    }
-                }
-                catch
-                {
-                    _toastService.ShowError("Identity API Parsing Error.");
-                    return false;
-                }
-
-                //Show the errors as toast
-                foreach(var error in errorsIdentity) 
-                {
-                    _toastService.ShowError(error);
-                }
+                var errors = await ParseIdentityError(response);
+                DisplayErrorAsToast(errors);
                 return false;
             }
 
             return true;
         }
 
+        private async Task<List<string>> ParseErrors(HttpResponseMessage response, bool isIdentityRequest = false, bool redirectOn404 = true)
+        {
+            List<string> allErrors = new List<string>();
+            //If the respone is unauthorized, redirect back to the login page
+            if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
+            {
+                _navigationManager.NavigateTo("login", true);
+            }
+            
+            if(response.IsSuccessStatusCode == false && isIdentityRequest == false)
+            {
+                string error = await ParseError(response);
+                allErrors.Add(error);
+            }
+            else if(response.StatusCode == HttpStatusCode.Unauthorized && isIdentityRequest && !redirectOn404)
+            {
+                var errors = await ParseIdentityLoginError(response);
+                allErrors.AddRange(errors);
+            }
+            else if(response.IsSuccessStatusCode == false && isIdentityRequest == true)
+            {
+                var errors = await ParseIdentityError(response);
+                allErrors.AddRange(errors);
+            }
 
+            return allErrors;
+        }
+
+        private async Task<string> ParseError(HttpResponseMessage response)
+        {
+            string errorResponse = await response.Content.ReadAsStringAsync();
+            return errorResponse;
+        }
+        private async Task<List<string>> ParseIdentityError(HttpResponseMessage response)
+        {
+            //Parsing errors from Identity API
+            var errors = new List<string>();
+            try
+            {
+                var details = await response.Content.ReadAsStringAsync();
+                var problemDetails = JsonDocument.Parse(details);
+                var errorList = problemDetails.RootElement.GetProperty("errors");
+                foreach (var errorEntry in errorList.EnumerateObject())
+                {
+                    if (errorEntry.Value.ValueKind == JsonValueKind.String)
+                    {
+                        errors.Add(errorEntry.Value.GetString()!);
+                    }
+                    else if (errorEntry.Value.ValueKind == JsonValueKind.Array)
+                    {
+                        errors.AddRange(
+                            errorEntry.Value.EnumerateArray().Select(
+                                e => e.GetString() ?? string.Empty)
+                            .Where(e => !string.IsNullOrEmpty(e)));
+                    }
+                }
+                return errors;
+            }
+            catch
+            {
+                Console.WriteLine("Identity API Parsing Error.");
+                return errors;
+            }
+        }
+        private async Task<List<string>> ParseIdentityLoginError(HttpResponseMessage response)
+        {
+            var errors = new List<string>();
+            try
+            {
+                //Login error:
+                var details = await response.Content.ReadAsStringAsync();
+                Newtonsoft.Json.Linq.JObject jsonObject = Newtonsoft.Json.Linq.JObject.Parse(details);
+                string detailValue = (string)jsonObject["detail"];
+                if(!string.IsNullOrEmpty(detailValue))
+                    errors.Add(detailValue);
+
+                //Don't want this error. It simply means incorrect username/password.
+                errors = errors.Where(x => x != "Failed").ToList();
+
+                return errors;
+            }
+            catch
+            {
+                Console.WriteLine("Error Processing Login Request");
+                return errors;
+            }
+        }
+        private void DisplayErrorAsToast(string error)
+        {
+            _toastService.ShowError(error);
+        }
+        private void DisplayErrorAsToast(List<string> errors)
+        {
+            foreach(var error in errors) 
+            {
+                _toastService.ShowError(error);
+            }
+        }
     }
 }
