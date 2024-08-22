@@ -22,6 +22,21 @@ My preferred method of hosting is to use an Azure App Service. This template use
 
 ## Getting Started
 Getting started with this project is easy.
+1. Using the script 'RenameProject.ps1', rename the 'BlazorTemplate' folders, files, and code references from 'BlazorTemplate' to the 'NewProjectNameOfYourChoice'. From the root of the solution, run this command:
+   ```
+   .\RenameProject.ps1 -FolderPath .  -NewName "NewProjectNameOfYourChoice"
+   ```
+   You can delete the script after you use it. Unless you want to rename your project again, there is no reason to keep it.
+
+2. From the root of the solution, start the API project by running this command:
+   ```
+   dotnet watch --project NewProjectNameOfYourChoice.API
+   ```
+   The API project acts as the host for the API and the App.
+
+3. You can create data in the UI, or you can use the API and the 'seed' method to create a large quantity of seed data to expirament with.
+
+## Misc Details    
 1. This project has no required outside dependencies to get started. The database is a SQLite DB, and the database will be created automatically when you startup the project the first time. You simply need to clone the repo, then run the API project by calling 'dotnet watch' from the API project folder.
 2. Authentication is handled by ASP Identity, and is stored in your own DB.
 3. On optional (but recommended) dependency is SendGrid. This template uses SendGrid to send emails. The template does not require SendGrid in order to work, however some features are not available until you add a SendGrid API key and system email address to the AppSettings.json. Features you cannot use without SendGrid include:
@@ -57,7 +72,7 @@ This project includes the necessary "Initial Creation" DB migration, used for th
 https://docs.microsoft.com/en-us/ef/core/cli/dotnet#common-options
 
 ## Using dotnet CLI
-Run these commands from the root of the solution.
+Run these commands from the root of the solution. Adjust these commands to match the name of your project (Replace 'BlazorTemplate')
 ```
 dotnet ef migrations add InitialCreate --project BlazorTemplate.Database --startup-project BlazorTemplate.API
 ```
@@ -86,7 +101,7 @@ This project uses the 'Unlicense'.  It is a simple license - review it at your o
 
 ## Misc & Recommended Tools
 1. [Azure](https://portal.azure.com)
-2. [Porkbun](https://porkbun.com)
+2. [Namecheap](https://namecheap.com)
 2. [Namecheap Logo Maker](https://www.namecheap.com/logo-maker/)
 3. [SSLS](https://www.ssls.com/)
 4. [SVG Crop](https://svgcrop.com/)
