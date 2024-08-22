@@ -22,19 +22,20 @@ My preferred method of hosting is to use an Azure App Service. This template use
 
 ## Getting Started
 Getting started with this project is easy.
-1. Using the script 'RenameProject.ps1', rename the 'BlazorTemplate' folders, files, and code references from 'BlazorTemplate' to the 'NewProjectNameOfYourChoice'. From the root of the solution, run this command:
+1. Recommendation: Use the Github 'Use this template' feature. Then clone the repo.
+2. Using the script 'RenameProject.ps1', rename the 'BlazorTemplate' folders, files, and code references from 'BlazorTemplate' to the 'NewProjectNameOfYourChoice'. From the root of the solution, run this command:
    ```
    .\RenameProject.ps1 -FolderPath .  -NewName "NewProjectNameOfYourChoice"
    ```
    You can delete the script after you use it. Unless you want to rename your project again, there is no reason to keep it.
 
-2. From the root of the solution, start the API project by running this command:
+3. From the root of the solution, start the API project by running this command:
    ```
    dotnet watch --project NewProjectNameOfYourChoice.API
    ```
    The API project acts as the host for the API and the App.
 
-3. You can create data in the UI, or you can use the API and the 'seed' method to create a large quantity of seed data to expirament with.
+4. You can create data in the UI, or you can use the API and the 'seed' method to create a large quantity of seed data to expirament with.
 
 ## Misc Details    
 1. This project has no required outside dependencies to get started. The database is a SQLite DB, and the database will be created automatically when you startup the project the first time. You simply need to clone the repo, then run the API project by calling 'dotnet watch' from the API project folder.
