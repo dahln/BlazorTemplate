@@ -15,7 +15,7 @@
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
 	  <PackageReference Include="Blazored.Modal" Version="7.3.1" />
 	  <PackageReference Include="Blazored.Toast" Version="4.2.1" />
-	  <PackageReference Include="BlazorSpinner" Version="2.1.0" />
+	  <PackageReference Include="BlazorSpinner" Version="3.0.0" />
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
   </ItemGroup>
