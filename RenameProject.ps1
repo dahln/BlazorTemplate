@@ -12,12 +12,16 @@ if (-not (Test-Path -Path $FolderPath)) {
     exit
 }
 
+# Define the old name segment to replace
+$OldName = "BlazorTemplate"
+$ScriptFileName = "RenameProject.ps1"
+
 # Step 1: Rename folders
 $folders = Get-ChildItem -Path $FolderPath -Recurse -Directory | Sort-Object -Property FullName -Descending
 
 foreach ($folder in $folders) {
-    if ($folder.Name -like "*Vault*") {
-        $newFolderName = $folder.Name -replace "Vault", $NewName
+    if ($folder.Name -like "*$OldName*" -and $folder.Name -ne $ScriptFileName) {
+        $newFolderName = $folder.Name -replace [regex]::Escape($OldName), $NewName
         $newFolderPath = Join-Path -Path $folder.Parent.FullName -ChildPath $newFolderName
 
         Rename-Item -Path $folder.FullName -NewName $newFolderName
@@ -26,34 +30,29 @@ foreach ($folder in $folders) {
 }
 
 # Step 2: Rename files
-$files = Get-ChildItem -Path $FolderPath -Recurse -File -Filter "*Vault*"
+$files = Get-ChildItem -Path $FolderPath -Recurse -File -Filter "*$OldName*"
 
 foreach ($file in $files) {
-    $newFileName = $file.Name -replace "Vault", $NewName
-    $newFilePath = Join-Path -Path $file.DirectoryName -ChildPath $newFileName
+    if ($file.Name -ne $ScriptFileName) {
+        $newFileName = $file.Name -replace [regex]::Escape($OldName), $NewName
+        $newFilePath = Join-Path -Path $file.DirectoryName -ChildPath $newFileName
 
-    Rename-Item -Path $file.FullName -NewName $newFileName
-    Write-Host "Renamed file '$($file.FullName)' to '$newFilePath'"
+        Rename-Item -Path $file.FullName -NewName $newFileName
+        Write-Host "Renamed file '$($file.FullName)' to '$newFilePath'"
+    }
 }
 
 # Step 3: Update content inside files
 $allFiles = Get-ChildItem -Path $FolderPath -Recurse -File
 
 foreach ($file in $allFiles) {
-    $content = Get-Content -Path $file.FullName -Raw
+    if ($file.Name -ne $ScriptFileName) {
+        $content = Get-Content -Path $file.FullName -Raw
 
-    if ($content -match "Vault") {
-        $newContent = $content -replace "Vault", $NewName
-        Set-Content -Path $file.FullName -Value $newContent
-        Write-Host "Updated content in '$($file.FullName)'"
+        if ($content -match [regex]::Escape($OldName)) {
+            $newContent = $content -replace [regex]::Escape($OldName), $NewName
+            Set-Content -Path $file.FullName -Value $newContent
+            Write-Host "Updated content in '$($file.FullName)'"
+        }
     }
 }
-
-Write-Host "**********************************************"
-Write-Host "Done!"
-Write-Host "You can delete this script file if you want."
-
-
-
-
-
