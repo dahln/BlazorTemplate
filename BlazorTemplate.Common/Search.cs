@@ -1,4 +1,4 @@
-﻿namespace BlazorTemplate.Common
+namespace BlazorTemplate.Common
 {
     public class Search
     {
@@ -22,3 +22,6 @@
         public int Total { get; set; }
     }
 }
+
+
+

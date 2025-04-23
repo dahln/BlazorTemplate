@@ -1,4 +1,4 @@
-﻿namespace BlazorTemplate.Identity.Models
+namespace BlazorTemplate.Identity.Models
 {
     /// <summary>
     /// User info from identity endpoint to establish claims.
@@ -22,3 +22,6 @@
          = [];
     }
 }
+
+
+

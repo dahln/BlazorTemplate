@@ -1,5 +1,3 @@
-using BlazorTemplate.Common.Enumerations;
-
 namespace BlazorTemplate.Common
 {
     public class Customer

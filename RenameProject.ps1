@@ -3,6 +3,9 @@ param (
     [string]$FolderPath,
 
     [Parameter(Mandatory = $true)]
+    [string]$OldName,
+
+    [Parameter(Mandatory = $true)]
     [string]$NewName
 )
 
@@ -13,7 +16,6 @@ if (-not (Test-Path -Path $FolderPath)) {
 }
 
 # Define the old name segment to replace
-$OldName = "BlazorTemplate"
 $ScriptFileName = "RenameProject.ps1"
 
 # Step 1: Rename folders

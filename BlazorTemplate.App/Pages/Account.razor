@@ -1,4 +1,4 @@
-﻿@page "/account"
+@page "/account"
 
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
@@ -228,7 +228,15 @@
         var userAlreadyExists = await API.PostAsync<bool>("api/v1/account/exists", new Common.AccountEmail() { Email = NewEmail }, false);
         if(userAlreadyExists == false)
         {
-            var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to change your email");
+            var options = new ModalOptions() 
+            { 
+                Position = ModalPosition.Middle,
+                Size = ModalSize.ExtraLarge,
+                Class = "bg-dark text-white modal-custom modal-size-large",
+                OverlayCustomClass = "custom-modal-overlay"
+            };
+
+            var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to change your email", options);
             var modalResult = await modal.Result;
 
             if (modalResult.Cancelled) { }
@@ -250,7 +258,15 @@
 
     async public Task ChangePassword()
     {
-        var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to change your password");
+        var options = new ModalOptions() 
+        { 
+            Position = ModalPosition.Middle,
+            Size = ModalSize.ExtraLarge,
+            Class = "bg-dark text-white modal-custom modal-size-large",
+            OverlayCustomClass = "custom-modal-overlay"
+        };
+
+        var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to change your password", options);
         var modalResult = await modal.Result;
 
         if (modalResult.Cancelled) { }
@@ -265,7 +281,14 @@
 
     async public Task DeleteAccount()
     {
-        var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to delete your account. This cannot be undone.");
+        var options = new ModalOptions() 
+        { 
+            Position = ModalPosition.Middle,
+            Size = ModalSize.ExtraLarge,
+            Class = "bg-dark text-white modal-custom modal-size-large",
+            OverlayCustomClass = "custom-modal-overlay"
+        };
+        var modal = _modalService.Show<ConfirmDialog>("Please confirm you want to delete your account. This cannot be undone.", options);
         var modalResult = await modal.Result;
 
         if (modalResult.Cancelled) { }
@@ -278,7 +301,7 @@
                 //user has been deleted. On an accout deletion, call the logout to 
                 //dispose of the cookie and then refresh the application.
                 await API.GetAsync("api/v1/account/logout");
-                Navigation.NavigateTo("login", true);
+                Navigation.NavigateTo("/", true);
             }
             
         }
@@ -362,3 +385,5 @@
         return QrUri;
     }
 }
+
+

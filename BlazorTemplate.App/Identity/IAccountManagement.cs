@@ -1,4 +1,4 @@
-﻿using BlazorTemplate.Identity.Models;
+using BlazorTemplate.Identity.Models;
 
 namespace BlazorTemplate.Identity
 {
@@ -32,3 +32,6 @@ namespace BlazorTemplate.Identity
         public Task<bool> CheckAuthenticatedAsync();
     }
 }
+
+
+

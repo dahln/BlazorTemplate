@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BlazorTemplate.API.Utility;
 using BlazorTemplate.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
-namespace BlazorTemplate.APi.Controllers
+namespace BlazorTemplate.API.Controllers
 {
     public class CustomerController : Controller
     {
@@ -233,7 +233,7 @@ namespace BlazorTemplate.APi.Controllers
                 var customer = new Database.Customer()
                 {
                     Name = LoremNET.Lorem.Words(2),
-                    Gender = (Common.Enumerations.Gender)LoremNET.Lorem.Number(0, 2),
+                    Gender = (Common.Gender)LoremNET.Lorem.Number(0, 2),
                     Email = LoremNET.Lorem.Email(),
                     Phone = LoremNET.Lorem.Number(1111111111, 9999999999).ToString(),
                     Address = $"{LoremNET.Lorem.Number(100, 10000).ToString()} {LoremNET.Lorem.Words(1)}",
@@ -254,3 +254,4 @@ namespace BlazorTemplate.APi.Controllers
         }
     }
 }
+

@@ -1,4 +1,4 @@
-﻿@page "/register"
+@page "/register"
 @using BlazorTemplate.Identity
 
 @inject IAccountManagement Acct
@@ -51,6 +51,11 @@
                         <div class="row mt-2">
                             <div class="col-md-12">
                                 <button @onclick="DoRegisterAsync" class="btn btn-primary">Register</button>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <a href="/"><strong>Have an account? Sign in here.</strong></a>
                             </div>
                         </div>
                     </div>
@@ -107,7 +112,7 @@
             success = true;
             email = password = confirmPassword = string.Empty;
             _toastService.ShowSuccess("Registration Successful. Please Sign In.");
-            _navigationManager.NavigateTo("login");
+            _navigationManager.NavigateTo("/");
         }
         else
         {
@@ -116,3 +121,6 @@
         }
     }
 }
+
+
+

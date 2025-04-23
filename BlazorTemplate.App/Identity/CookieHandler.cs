@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace BlazorTemplate.Identity
@@ -23,3 +23,6 @@ namespace BlazorTemplate.Identity
         }
     }
 }
+
+
+

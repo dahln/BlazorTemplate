@@ -1,6 +1,9 @@
 using System.Web;
+using BlazorTemplate.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -10,47 +13,49 @@ namespace BlazorTemplate.API.Utility;
 //The details in this github issue where helpful.
 //https://github.com/dotnet/aspnetcore/issues/50298
 
-public class AuthMessageSenderOptions
-{
-    public string? SendGridKey { get; set; }
-}
-
 internal sealed class EmailSender : IEmailSender<IdentityUser>
 {
-    private IConfiguration _configuration { get; }
-    public AuthMessageSenderOptions Options { get; }
     private readonly ILogger _logger;
     private IHttpContextAccessor _httpContextAccessor;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor, IConfiguration configuration,
-                       ILogger<EmailSender> logger, IHttpContextAccessor httpContextAccessor)
+
+    public EmailSender(ILogger<EmailSender> logger, IHttpContextAccessor httpContextAccessor, IServiceScopeFactory serviceScopeFactory)
     {
-        _configuration = configuration;
-        Options = optionsAccessor.Value;
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
+        _scopeFactory = serviceScopeFactory;
     }
 
     private async Task SendEmailAsync(string toEmail, string subject, string message)
     {
-        if (string.IsNullOrEmpty(Options.SendGridKey))
+        // Create a scope to get a scoped instance of ApplicationDbContext
+        using (var scope = _scopeFactory.CreateScope())
         {
-            return;
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var settings = await dbContext.SystemSettings.FirstOrDefaultAsync();
+
+            if (string.IsNullOrEmpty(settings.SendGridKey))
+            {
+                return;
+            }
+
+            if(string.IsNullOrEmpty(settings.SendGridSystemEmailAddress))
+            {
+                return;
+            }
+            await Execute(settings.SendGridKey, settings.SendGridSystemEmailAddress, subject, message, toEmail);
         }
-        if(string.IsNullOrEmpty(_configuration.GetValue<string>("SendGridSystemEmailAddress")))
-        {
-            return;
-        }
-        await Execute(Options.SendGridKey, subject, message, toEmail);
     }
 
-    private async Task Execute(string apiKey, string subject, string message, string toEmail)
+    private async Task Execute(string apiKey, string sendGridFromEmail, string subject, string message, string toEmail)
     {
-        if (string.IsNullOrEmpty(Options.SendGridKey))
+        if (string.IsNullOrEmpty(apiKey))
         {
             return;
         }
-        if(string.IsNullOrEmpty(_configuration.GetValue<string>("SendGridSystemEmailAddress")))
+
+        if(string.IsNullOrEmpty(sendGridFromEmail))
         {
             return;
         }
@@ -58,7 +63,7 @@ internal sealed class EmailSender : IEmailSender<IdentityUser>
         var client = new SendGridClient(apiKey);
         var msg = new SendGridMessage()
         {
-            From = new EmailAddress(_configuration.GetValue<string>("SendGridSystemEmailAddress")),
+            From = new EmailAddress(sendGridFromEmail),
             Subject = subject,
             PlainTextContent = message,
             HtmlContent = message
@@ -105,60 +110,5 @@ internal sealed class EmailSender : IEmailSender<IdentityUser>
     {
         var resetLink = $"https://{_httpContextAccessor.HttpContext.Request.Host.Value}/password/reset/{resetCode}";
         return SendEmailAsync(email, "Reset your password", $"Please reset your password using the following link <a href='{resetLink}'>Reset Password.</a>");
-    }
-}
-
-public class EmailSenderGeneric : IEmailSender
-{
-    private IConfiguration _configuration { get; }
-    public AuthMessageSenderOptions Options { get; }
-    private readonly ILogger _logger;
-
-    public EmailSenderGeneric(IOptions<AuthMessageSenderOptions> optionsAccessor, IConfiguration configuration,
-                       ILogger<EmailSenderGeneric> logger)
-    {
-        _configuration = configuration;
-        Options = optionsAccessor.Value;
-        _logger = logger;
-    }
-
-
-    public async Task SendEmailAsync(string toEmail, string subject, string message)
-    {
-        if (string.IsNullOrEmpty(Options.SendGridKey))
-        {
-            throw new Exception("Null SendGridKey");
-        }
-        await Execute(Options.SendGridKey, subject, message, toEmail);
-    }
-
-    public async Task Execute(string apiKey, string subject, string message, string toEmail)
-    {
-        if (string.IsNullOrEmpty(Options.SendGridKey))
-        {
-            return;
-        }
-        if(string.IsNullOrEmpty(_configuration.GetValue<string>("SendGridSystemEmailAddress")))
-        {
-            return;
-        }
-
-        var client = new SendGridClient(apiKey);
-        var msg = new SendGridMessage()
-        {
-            From = new EmailAddress(_configuration.GetValue<string>("SendGridSystemEmailAddress")),
-            Subject = subject,
-            PlainTextContent = message,
-            HtmlContent = message
-        };
-        msg.AddTo(new EmailAddress(toEmail));
-
-        // Disable click tracking.
-        // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
-        msg.SetClickTracking(false, false);
-        var response = await client.SendEmailAsync(msg);
-        _logger.LogInformation(response.IsSuccessStatusCode 
-                               ? $"Email to {toEmail} queued successfully!"
-                               : $"Failure Email to {toEmail}");
     }
 }

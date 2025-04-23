@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Reflection;
 
-namespace BlazorTemplate.Common.Enumerations
+namespace BlazorTemplate.Common
 {
     public enum Gender
     {
@@ -33,3 +33,4 @@ namespace BlazorTemplate.Common.Enumerations
         }
     }
 }
+

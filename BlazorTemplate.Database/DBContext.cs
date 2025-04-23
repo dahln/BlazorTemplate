@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +9,7 @@ namespace BlazorTemplate.Database
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<SystemSetting> SystemSettings { get ;set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -16,3 +17,6 @@ namespace BlazorTemplate.Database
         }
     }
 }
+
+
+

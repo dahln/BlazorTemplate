@@ -1,9 +1,12 @@
-﻿@page "/login"
+@* @page "/login" *@
+
 @using BlazorTemplate.Identity
 @using BlazorTemplate.Common
 @inject IAccountManagement Acct
 @inject BlazorTemplate.App.Services.API API
 @inject IToastService _toastService
+@inject NavigationManager _navigationManager
+@inject IJSRuntime JSRuntime
 
 
 <AuthorizeView>
@@ -100,8 +103,17 @@
                             </div>
                         </div>
                         }
+                        @if(RegistrationEnabled)
+                        {
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <a href="register"><strong>Need an Account? Register Here.</strong></a>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
+                
             </div>
         </div>
         
@@ -119,6 +131,12 @@
     private bool TwoFactorRememberMe { get; set; } = false;
     private bool TwoFactorPrompt { get; set; } = false;
     private bool TwoFactorRecoveryPrompt { get; set; } = false;
+    private bool RegistrationEnabled { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        RegistrationEnabled = await API.GetAsync<bool>("api/v1/account/operations/registration");
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -175,6 +193,8 @@
                 };
                 var response = await API.PostAsync<IdentityManage2faResponse>("/manage/2fa", temp, true, true, true);
             }
+
+            _navigationManager.NavigateTo("/");
         }
         else
         {
@@ -237,4 +257,9 @@
         TwoFactorRecoveryPrompt = true;
         TwoFactorPrompt = false;
     }
+
+    
 }
+
+
+

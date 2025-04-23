@@ -27,7 +27,7 @@ Getting started with this project is easy.
 
    Some files and folders will not be updated if they are open. Close VS Code, Visual Studio, or other tools prior to running this script.
    ```
-   .\RenameProject.ps1 -FolderPath .  -NewName "NewProjectNameOfYourChoice"
+   .\RenameProject.ps1 -FolderPath . -OldName "BlazorTemplate"  -NewName "NewProjectNameOfYourChoice"
    ```
    You can delete the script after you use it. Unless you want to rename your project again, there is no reason to keep it.
 
@@ -108,5 +108,6 @@ This project uses the 'Unlicense'.  It is a simple license - review it at your o
 2. [Namecheap Logo Maker](https://www.namecheap.com/logo-maker/)
 3. [SSLS](https://www.ssls.com/)
 4. [SVG Crop](https://svgcrop.com/)
+
 
 

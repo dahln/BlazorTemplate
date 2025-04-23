@@ -1,6 +1,7 @@
-﻿using BlazorTemplate.Common.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using BlazorTemplate.Common;
 
 namespace BlazorTemplate.Database
 {
@@ -27,4 +28,18 @@ namespace BlazorTemplate.Database
 
         public string OwnerId { get; set; }
     }
+
+    
+
+    public class SystemSetting
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string? SendGridKey { get; set; }
+        public string? SendGridSystemEmailAddress { get; set; }
+        public bool RegistrationEnabled { get; set; } = true;
+        public string? EmailDomainRestriction { get; set; }
+    }
 }
+
+
+

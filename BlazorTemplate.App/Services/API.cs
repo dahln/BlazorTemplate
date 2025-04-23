@@ -1,4 +1,4 @@
-﻿using Blazored.Toast.Services;
+using Blazored.Toast.Services;
 using BlazorSpinner;
 using BlazorTemplate.Common;
 using Microsoft.AspNetCore.Components;
@@ -167,7 +167,7 @@ namespace BlazorTemplate.App.Services
             //If the respone is unauthorized, redirect back to the login page
             if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
             {
-                _navigationManager.NavigateTo("login", true);
+                _navigationManager.NavigateTo("/", true);
             }
             
             if(response.IsSuccessStatusCode == false && isIdentityRequest == false)
@@ -199,7 +199,7 @@ namespace BlazorTemplate.App.Services
             //If the respone is unauthorized, redirect back to the login page
             if(response.StatusCode == HttpStatusCode.Unauthorized && redirectOn404)
             {
-                _navigationManager.NavigateTo("login", true);
+                _navigationManager.NavigateTo("/", true);
             }
             
             if(response.IsSuccessStatusCode == false && isIdentityRequest == false)
@@ -297,3 +297,6 @@ namespace BlazorTemplate.App.Services
         }
     }
 }
+
+
+

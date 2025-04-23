@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using System.Security.Principal;
 
 namespace BlazorTemplate.API.Utility
@@ -20,3 +20,6 @@ namespace BlazorTemplate.API.Utility
         }
     }
 }
+
+
+

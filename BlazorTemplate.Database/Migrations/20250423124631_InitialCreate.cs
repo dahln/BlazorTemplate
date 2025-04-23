@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -74,6 +74,21 @@ namespace BlazorTemplate.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SystemSettings",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    SendGridKey = table.Column<string>(type: "TEXT", nullable: true),
+                    SendGridSystemEmailAddress = table.Column<string>(type: "TEXT", nullable: true),
+                    RegistrationEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    EmailDomainRestriction = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemSettings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -242,6 +257,9 @@ namespace BlazorTemplate.Database.Migrations
                 name: "Customers");
 
             migrationBuilder.DropTable(
+                name: "SystemSettings");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -249,3 +267,4 @@ namespace BlazorTemplate.Database.Migrations
         }
     }
 }
+

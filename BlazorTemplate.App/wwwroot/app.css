@@ -1,7 +1,5 @@
-body {
-    /*font-family: 'Courier New', monospace;*/
-    font-family: 'Yu Gothic UI' !important;
-    font-weight: 100 !important;
+html, body {
+    overflow-x: hidden;
 }
 
 h1:focus {
@@ -98,4 +96,60 @@ a, .btn-link {
 
 code {
     color: #c02d76;
+}
+
+
+.modal-custom {
+    display: flex;
+    flex-direction: column;
+    /* background-color: #fff; */
+    border-radius: 10px !important;
+    /* border: 1px solid #fff; */
+    padding: 0.4rem 1rem;
+    box-shadow: 0 2px 2px rgba(0,0,0,.25);
+    margin: 5.75rem;
+    width: 95vw; 
+    max-width: 800px; 
+    /* max-height: 90vh; */
+}
+
+.modal-size-large {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custom-modal-overlay {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+
+
+
+
+.has-border-light {
+    border: 1px solid #fff;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.has-border-dark {
+    border: 1px solid #ddd;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.has-background-blazor {
+    background-color: #592b8f !important;
+}
+
+.has-cursor-grab {
+    cursor: grab;
+}
+
+/* links should be white */
+a {
+    color: white;
 }

@@ -1,6 +1,7 @@
 ﻿.navbar-brand {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
+    user-select: none;
 }
 
 .navbar-brand-logo{
@@ -14,4 +15,12 @@
 .user-icon {
     color: steelblue;
     font-size: 1em;
+}
+
+.signout-icon {
+    color:white;
+}
+
+.admin-icon {
+    color: mediumpurple;
 }

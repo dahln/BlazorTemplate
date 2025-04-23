@@ -1,4 +1,4 @@
-﻿@page "/logout"
+@page "/logout"
 @using BlazorTemplate.Identity
 @inject IAccountManagement AcctMgmt
 
@@ -6,7 +6,7 @@
     <Authorized>
         <div class="alert alert-info">Logging you out...</div>
     </Authorized>
-    <NotAuthorized><div class="alert alert-success">You are logged out. <a href="/login">Log in.</a></div></NotAuthorized>
+    <NotAuthorized><div class="alert alert-success">You are logged out. <a href="/">Log in.</a></div></NotAuthorized>
 </AuthorizeView>
 
 @code {
@@ -21,3 +21,6 @@
         await base.OnInitializedAsync();
     }
 }
+
+
+

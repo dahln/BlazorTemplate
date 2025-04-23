@@ -1,7 +1,7 @@
-﻿@page "/customer"
+@page "/customer"
 @page "/customer/{id}"
 
-@using BlazorTemplate.Common.Enumerations
+@using BlazorTemplate.Common
 
 @inject NavigationManager _navigationManager
 @inject BlazorTemplate.App.Services.API API
@@ -156,7 +156,7 @@
         <button class="btn btn-primary btn-customer float-end" @onclick="Save"><i class="far fa-save me-1"></i>Save</button>
         @if (!string.IsNullOrEmpty(Id))
         {
-            <button class="btn btn-outline-dark btn-customer float-end me-lg-2 me-md-2" @onclick="CancelChanges"><i class="bi bi-x-lg me-1"></i>Cancel Changes</button>
+            <button class="btn btn-outline-danger btn-customer float-end me-lg-2 me-md-2" @onclick="CancelChanges"><i class="bi bi-x-lg me-1"></i>Cancel Changes</button>
         }
     </div>
 </div>

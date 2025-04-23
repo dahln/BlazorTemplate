@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Net.Http.Json;
@@ -6,6 +6,7 @@ using BlazorTemplate.Identity.Models;
 using BlazorTemplate.App.Services;
 using BlazorTemplate.Common;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace BlazorTemplate.Identity
 {
@@ -30,12 +31,19 @@ namespace BlazorTemplate.Identity
                     email,
                     password
                 };
-                var result = await API.PostAsync("register", content, true, true);
+                var result = await API.PostAsync("api/v1/account/register", content, true, false);
 
-                // successful?
-                if (result)
+                if(result)
                 {
+
                     return new FormResult { Succeeded = true };
+                }
+                else
+                {
+                    return new FormResult
+                    {
+                        Succeeded = false
+                    };
                 }
             }
             catch { }
@@ -114,7 +122,7 @@ namespace BlazorTemplate.Identity
             {
                 // the user info endpoint is secured, so if the user isn't logged in this will fail
                 var userResponse = await API.GetAsync<UserInfo>("manage/info", false, true, false);
-                
+                var userRoles = await API.GetAsync<List<string>>("api/v1/account/roles", false, false, false);
                 if (userResponse != null)
                 {
                     // in our system name and email are the same
@@ -123,6 +131,12 @@ namespace BlazorTemplate.Identity
                         new(ClaimTypes.Name, userResponse.Email),
                         new(ClaimTypes.Email, userResponse.Email)
                     };
+                    
+                    if(userRoles != null)
+                    {
+                        var rolesClaims = userRoles.Select(x => new Claim(ClaimTypes.Role, x)).ToList(); 
+                        claims.AddRange(rolesClaims);                       
+                    }
 
                     // add any additional claims
                     claims.AddRange(
@@ -156,3 +170,6 @@ namespace BlazorTemplate.Identity
         }
     }
 }
+
+
+

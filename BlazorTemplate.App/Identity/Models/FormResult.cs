@@ -1,4 +1,4 @@
-﻿namespace BlazorTemplate.Identity.Models
+namespace BlazorTemplate.Identity.Models
 {
     /// <summary>
     /// Response for login and registration.
@@ -18,3 +18,6 @@
         public bool Prompt2FA { get; set; }
     }
 }
+
+
+

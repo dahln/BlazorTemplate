@@ -1,4 +1,4 @@
-﻿namespace BlazorTemplate.Identity.Models
+namespace BlazorTemplate.Identity.Models
 {
     /// <summary>
     /// Basic user information to register and/or login.
@@ -16,3 +16,6 @@
         public string Password { get; set; } = string.Empty;
     }
 }
+
+
+
