@@ -1,7 +1,7 @@
 @attribute [Authorize(Roles = "Administrator")]
 @page "/admin"
 
-@using BlazorTemplate.Common
+@using BlazorTemplate.Dto
 
 @inject NavigationManager _navigationManger
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
@@ -96,9 +96,9 @@
         <table class="table table-sm table-hover">
             <thead>
                 <tr>
-                    <th width="50%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.User.Email)))" class="pointer">
+                    <th width="50%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Dto.User.Email)))" class="pointer">
                         Email
-                        @if (Search.SortBy == nameof(BlazorTemplate.Common.User.Email))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Dto.User.Email))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -169,10 +169,10 @@
     private Search Search { get; set; } = new Search();
     int PageSize { get; set; } = 15;
 
-    List<BlazorTemplate.Common.User> Items = new List<BlazorTemplate.Common.User>();
+    List<BlazorTemplate.Dto.User> Items = new List<BlazorTemplate.Dto.User>();
     int TotalFound { get; set; }
 
-    private Common.SystemSettings SystemSettings { get; set; } = new SystemSettings();
+    private Dto.SystemSettings SystemSettings { get; set; } = new SystemSettings();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -195,7 +195,7 @@
         if (reset == true)
         {
             Search = new Search();
-            Search.SortBy = nameof(BlazorTemplate.Common.User.Email);
+            Search.SortBy = nameof(BlazorTemplate.Dto.User.Email);
             page = null;
         }
 
@@ -209,7 +209,7 @@
         };
 
         await localStorage.SetItemAsync("Usersearch", Search);
-        var response = await API.PostAsync<Common.SearchResponse<Common.User>>($"api/v1/Users", Search);
+        var response = await API.PostAsync<Dto.SearchResponse<Dto.User>>($"api/v1/Users", Search);
         if(response != null)
         {
             Items = response.Results;
@@ -225,12 +225,12 @@
         await SearchUsers(Search.Page, false);
     }
 
-    async private Task ToggleAdministrator(BlazorTemplate.Common.User user)
+    async private Task ToggleAdministrator(BlazorTemplate.Dto.User user)
     {
         await API.GetAsync($"api/v1/user/{user.Id}");
     }
 
-    async private Task DeleteUser(BlazorTemplate.Common.User user)
+    async private Task DeleteUser(BlazorTemplate.Dto.User user)
     {
         var options = new ModalOptions() 
         { 
@@ -257,7 +257,7 @@
 
     async private Task GetSettings()
     {
-        SystemSettings = await API.GetAsync<Common.SystemSettings>("api/v1/settings");
+        SystemSettings = await API.GetAsync<Dto.SystemSettings>("api/v1/settings");
     }
 
     async private Task UpdateSettings()

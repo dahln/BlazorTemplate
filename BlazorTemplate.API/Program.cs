@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using BlazorTemplate.API.Utility;
 using BlazorTemplate.Database;
+using BlazorTemplate.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -55,6 +56,9 @@ builder.Services.AddTransient<UserManager<IdentityUser>>();
 builder.Services.AddTransient<RoleManager<IdentityRole>>();
 builder.Services.AddTransient<SignInManager<IdentityUser>>();
 builder.Services.AddTransient<IEmailSender<IdentityUser>, EmailSender>();
+
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<CustomerService>();
 
 var app = builder.Build();
 

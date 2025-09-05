@@ -1,7 +1,7 @@
 @page "/customer"
 @page "/customer/{id}"
 
-@using BlazorTemplate.Common
+@using BlazorTemplate.Dto
 
 @inject NavigationManager _navigationManager
 @inject BlazorTemplate.App.Services.API API
@@ -167,7 +167,7 @@
     [Parameter]
     public string Id { get; set; }
 
-    private BlazorTemplate.Common.Customer customer = new BlazorTemplate.Common.Customer();
+    private BlazorTemplate.Dto.Customer customer = new BlazorTemplate.Dto.Customer();
     private bool Locked { get; set; }
 
     protected override async Task OnParametersSetAsync()
@@ -176,7 +176,7 @@
         {
             Locked = true;
             
-            customer = await API.GetAsync<Common.Customer>($"api/v1/customer/{Id}");
+            customer = await API.GetAsync<Dto.Customer>($"api/v1/customer/{Id}");
             if(customer == null)
                 _toastService.ShowError("Customer failed to load");
         }
@@ -225,7 +225,7 @@
     async private Task CancelChanges()
     {
         Locked = true;
-        customer = await API.GetAsync<Common.Customer>($"api/v1/customer/{Id}");
+        customer = await API.GetAsync<Dto.Customer>($"api/v1/customer/{Id}");
     }
 
     //Reading image bytes in browser may not be optimal in all situations. Adjust as needed.

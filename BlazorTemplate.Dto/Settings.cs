@@ -1,4 +1,4 @@
-namespace BlazorTemplate.Common
+namespace BlazorTemplate.Dto
 {
     public class SystemSettings
     {

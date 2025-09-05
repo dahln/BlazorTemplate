@@ -50,11 +50,14 @@ Getting started with this project is easy.
 5. This template has some basic admin features. The first user to register will automatically be given the administrator role. Administrative abilities include: enable/disable registration, setting the SendGrid email  API values, and listing/deleting registered users.
 
 ## Project Architecture
-This application has 4 projects in the solution. The API, the App, Common, and Database. The API is all the server functionality; it contains all the database operations and server side logic. The App is a Blazor WASM project; it consumes the API. The Common project is data models that are common to both the API and the App; these 'Common' models make it easy to standardize the format of the data passed between the API and the App. The database project contains all the Entities and DB Context. Depending on your needs, you could create a service layer to contain all the business logic and remove DB operations from the API project. Every project is different, this template is a starting point.
+This application now has 5 projects in the solution:
+ - **API**: Acts as a traffic-cop, handling HTTP requests and delegating all database and business logic operations to the Service layer.
+ - **Service**: The middle layer where all business logic and database operations are performed. The API does not directly interact with the database.
+ - **App**: A Blazor WASM project that consumes the API.
+ - **Dto**: Contains data transfer objects shared between the API, Service, and App projects. This was previously named 'Common'.
+ - **Database**: Contains all the Entities and DB Context.
 
-The API project acts as the host for the API and the App. The App, while an independent application, still needs to be hosted somewhere. This template combines hosts the App as part of the API. This fits the needs for most applications, but is easy to separate if needed. Another benefit of combining hosting is that it removes the necessity for obnoxious CORS configurations.
-
-On startup you can browse to Swagger to use the API directly or browse to the App.
+This separation makes the architecture more maintainable and scalable. The API project hosts both the API and the App. The App, while an independent application, is hosted as part of the API, which removes the need for complex CORS configurations. On startup, you can browse to Swagger to use the API directly or browse to the App.
 
 ## API Versioning
 There are tools to handle API versioning. Add which ever tools you prefer. This template handles API version manually by specifying v1 in the service URL.

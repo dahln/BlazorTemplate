@@ -1,6 +1,6 @@
 @page "/customers"
 
-@using BlazorTemplate.Common
+@using BlazorTemplate.Dto
 
 @inject NavigationManager _navigationManger
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
@@ -51,9 +51,9 @@
         <table class="table table-sm table-hover">
             <thead>
                 <tr>
-                    <th width="50%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.Customer.Name)))" class="pointer">
+                    <th width="50%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Dto.Customer.Name)))" class="pointer">
                         Name
-                        @if (Search.SortBy == nameof(BlazorTemplate.Common.Customer.Name))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Dto.Customer.Name))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -65,9 +65,9 @@
                             }
                         }
                     </th>
-                    <th width="20%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.Customer.State)))" class="pointer">
+                    <th width="20%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Dto.Customer.State)))" class="pointer">
                         State
-                        @if (Search.SortBy == nameof(BlazorTemplate.Common.Customer.State))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Dto.Customer.State))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -79,9 +79,9 @@
                             }
                         }
                     </th>
-                    <th width="20%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.Customer.Active)))" class="pointer">
+                    <th width="20%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Dto.Customer.Active)))" class="pointer">
                         Active
-                        @if (Search.SortBy == nameof(BlazorTemplate.Common.Customer.Active))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Dto.Customer.Active))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -93,9 +93,9 @@
                             }
                         }
                     </th>
-                    <th width="10%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Common.Customer.Gender)))" class="pointer">
+                    <th width="10%" scope="col" @onclick="(() => Sort(nameof(BlazorTemplate.Dto.Customer.Gender)))" class="pointer">
                         Gender
-                        @if (Search.SortBy == nameof(BlazorTemplate.Common.Customer.Gender))
+                        @if (Search.SortBy == nameof(BlazorTemplate.Dto.Customer.Gender))
                         {
                             @if (Search.SortDirection == SortDirection.Ascending)
                             {
@@ -116,7 +116,7 @@
                         <td><div class="btn btn-link" @onclick="(() => SelectCustomer(item.Id))">@item.Name</div></td>
                         <td class="align-middle">@item.State</td>
                         <td class="align-middle">
-                            @if (item.Active)
+                            @if (item.Active == true)
                             {
                                 <i class="bi bi-check-lg green"></i>
                             }
@@ -173,7 +173,7 @@
     private Search Search { get; set; } = new Search();
     int PageSize { get; set; } = 15;
 
-    List<BlazorTemplate.Common.Customer> Items = new List<BlazorTemplate.Common.Customer>();
+    List<BlazorTemplate.Dto.Customer> Items = new List<BlazorTemplate.Dto.Customer>();
     int TotalFound { get; set; }
 
     protected override async Task OnParametersSetAsync()
@@ -195,7 +195,7 @@
         if (reset == true)
         {
             Search = new Search();
-            Search.SortBy = nameof(BlazorTemplate.Common.Customer.Name);
+            Search.SortBy = nameof(BlazorTemplate.Dto.Customer.Name);
             page = null;
         }
 
@@ -209,7 +209,7 @@
         };
 
         await localStorage.SetItemAsync("CustomerSearch", Search);
-        var response = await API.PostAsync<Common.SearchResponse<Common.Customer>>($"api/v1/customers", Search);
+        var response = await API.PostAsync<Dto.SearchResponse<Dto.Customer>>($"api/v1/customers", Search);
         if(response != null)
         {
             Items = response.Results;

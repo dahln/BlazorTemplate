@@ -18,7 +18,7 @@
 
 
   <ItemGroup>
-	  <ProjectReference Include="..\BlazorTemplate.Common\BlazorTemplate.Common.csproj" />
+	  <ProjectReference Include="..\BlazorTemplate.Dto\BlazorTemplate.Dto.csproj" />
 	</ItemGroup>
 
 

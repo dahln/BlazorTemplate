@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorTemplate.Common
+namespace BlazorTemplate.Dto
 {
     public class AccountEmail
     {

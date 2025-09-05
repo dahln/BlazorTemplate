@@ -1,6 +1,6 @@
 using Blazored.Toast.Services;
 using BlazorSpinner;
-using BlazorTemplate.Common;
+using BlazorTemplate.Dto;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using System.Data;

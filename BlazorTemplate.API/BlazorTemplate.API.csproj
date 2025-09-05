@@ -12,7 +12,6 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
     <PackageReference Include="SendGrid" Version="9.29.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-	  <PackageReference Include="Lorem.Universal.Net" Version="4.0.80" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,7 +21,7 @@
 
   <ItemGroup>
 	  <ProjectReference Include="..\BlazorTemplate.App\BlazorTemplate.App.csproj" />
-	  <ProjectReference Include="..\BlazorTemplate.Database\BlazorTemplate.Database.csproj" />
+	  <ProjectReference Include="..\BlazorTemplate.Service\BlazorTemplate.Service.csproj" />
 	</ItemGroup>
 
 </Project>

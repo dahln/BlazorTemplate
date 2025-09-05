@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using QRCoder
-@using BlazorTemplate.Common
+@using BlazorTemplate.Dto
 
 @inject NavigationManager Navigation
 
@@ -225,7 +225,7 @@
 
     async public Task ChangeEmail()
     {
-        var userAlreadyExists = await API.PostAsync<bool>("api/v1/account/exists", new Common.AccountEmail() { Email = NewEmail }, false);
+        var userAlreadyExists = await API.PostAsync<bool>("api/v1/account/exists", new Dto.AccountEmail() { Email = NewEmail }, false);
         if(userAlreadyExists == false)
         {
             var options = new ModalOptions() 
@@ -243,7 +243,7 @@
             else
             {
                 var content = new { NewEmail = NewEmail };
-                var response = await API.PostAsync<Common.IdentityManageUserResponse>("manage/info", content, true, true);
+                var response = await API.PostAsync<Dto.IdentityManageUserResponse>("manage/info", content, true, true);
                 if(response != null)
                 {
                     _toastService.ShowSuccess("Email changed. An email has been sent to the new email. Your email will not be changed until you confirm the email using the link sent to you.");
@@ -273,7 +273,7 @@
         else
         {
             var content = new { OldPassword = OldPassword, NewPassword = NewPassword };
-            var response = await API.PostAsync<Common.IdentityManageUserResponse>("manage/info", content, true, true);
+            var response = await API.PostAsync<Dto.IdentityManageUserResponse>("manage/info", content, true, true);
             if(response != null)
                 _toastService.ShowSuccess("Done. Use your new password with next sign in.");
         }

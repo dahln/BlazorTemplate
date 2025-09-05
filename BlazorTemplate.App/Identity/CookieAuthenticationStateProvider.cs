@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Net.Http.Json;
 using BlazorTemplate.Identity.Models;
 using BlazorTemplate.App.Services;
-using BlazorTemplate.Common;
+using BlazorTemplate.Dto;
 using Newtonsoft.Json;
 using System.Runtime.CompilerServices;
 

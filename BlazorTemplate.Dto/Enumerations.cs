@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Reflection;
 
-namespace BlazorTemplate.Common
+namespace BlazorTemplate.Dto
 {
     public enum Gender
     {
