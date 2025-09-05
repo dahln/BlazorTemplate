@@ -177,16 +177,16 @@ public class CustomerService
             var customer = new Database.Customer()
             {
                 Name = LoremNET.Lorem.Words(2),
-                Gender = (Dto.Gender)LoremNET.Lorem.Number(0, 2),
+                Gender = (Dto.Gender)LoremNET.Lorem.Enum<Dto.Gender>(),
                 Email = LoremNET.Lorem.Email(),
-                Phone = LoremNET.Lorem.Number(1111111111, 9999999999).ToString(),
-                Address = $"{LoremNET.Lorem.Number(100, 10000).ToString()} {LoremNET.Lorem.Words(1)}",
+                Phone = LoremNET.Lorem.HexNumber(10),
+                Address = $"{LoremNET.Lorem.HexNumber(5).ToString()} {LoremNET.Lorem.Words(1)}",
                 City = LoremNET.Lorem.Words(1),
                 State = LoremNET.Lorem.Words(1),
-                Postal = LoremNET.Lorem.Number(11111, 99999).ToString(),
+                Postal = LoremNET.Lorem.HexNumber(5),
                 BirthDate = LoremNET.Lorem.DateTime(1923, 1, 1),
                 Notes = LoremNET.Lorem.Paragraph(5, 10, 10),
-                Active = LoremNET.Lorem.Number(0, 1) == 0 ? false : true,
+                Active = true,
                 OwnerId = userId
             };
 
