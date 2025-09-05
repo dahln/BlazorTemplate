@@ -11,9 +11,6 @@ public class CustomerService
         _db = applicationDbContext;
     }
 
-    /// <summary>
-    /// Asynchronously creates a new customer record in the database. Get back the Id of new customer record.
-    /// </summary>
     public async Task<string> CreateCustomerAsync(Dto.Customer model, string userId)
     {
         Database.Customer customer = new Database.Customer()

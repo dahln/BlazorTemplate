@@ -3,9 +3,6 @@ This project is an example of one way to build a .NET Web application, using Bla
 
 Some of the page and components in the WASM client app are copied from or derived from the stock Microsoft templates, for example login and register.
 
-## Demo
-[https://demo.dahln.com/](https://demo.dahln.com/)
-
 My preferred method of hosting is to use an Azure App Service. This template uses Sqlite for the database. In my experience Sqlite doesn't perform reliably on an Azure App Service. This demo is hosted on an Ubuntu server. You can review the CI/CD action for ideas on deploying to a Linux server instead of an App Service. Feel free to reach out if you have questions for setting up a server. 
 
 ## Technologies
@@ -51,9 +48,9 @@ Getting started with this project is easy.
 
 ## Project Architecture
 This application now has 5 projects in the solution:
- - **API**: Acts as a traffic-cop, handling HTTP requests and delegating all database and business logic operations to the Service layer.
+ - **API**: Handling HTTP requests and delegating all database and business logic operations to the Service layer. Manages authentication and authorization. Hosts the App in the same process.
  - **Service**: The middle layer where all business logic and database operations are performed. The API does not directly interact with the database.
- - **App**: A Blazor WASM project that consumes the API.
+ - **App**: A Blazor WASM project that consumes the API. Hosted in the API process.
  - **Dto**: Contains data transfer objects shared between the API, Service, and App projects. This was previously named 'Common'.
  - **Database**: Contains all the Entities and DB Context.
 

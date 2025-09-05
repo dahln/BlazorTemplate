@@ -98,12 +98,7 @@ public class CustomerServiceTests
         var service = GetCustomerService(db);
         var userId = "user1";
 
-        // Create 25 Customers
-        for (int i = 1; i <= 25; i++)
-        {
-            var customer = new BlazorTemplate.Dto.Customer { Name = $"Test Customer {i}", Email = $"test{i}@example.com" };
-            var customerId = await service.CreateCustomerAsync(customer, userId);
-        }
+        await service.SeedCustomers(100, userId);
 
         Search search = new Search()
         {
@@ -111,7 +106,7 @@ public class CustomerServiceTests
             PageSize = 10,
             SortBy = "Name",
             SortDirection = SortDirection.Ascending,
-            FilterText = "Test"
+            FilterText = string.Empty
         };
         var searchResults = await service.SearchCustomersAsync(search, userId);
         Assert.Equal(10, searchResults.Results.Count);
