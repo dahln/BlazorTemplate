@@ -163,8 +163,8 @@ public class CustomerService
             City = c.City,
             State = c.State,
             Postal = c.Postal,
-            Gender = c.Gender.Value,
-            Active = c.Active.Value,
+            Gender = c.Gender,
+            Active = c.Active,
         }).ToList();
 
         return response;
