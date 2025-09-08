@@ -36,5 +36,5 @@ jobs:
           sudo apt-get install -y sshpass openssh-client
           dotnet publish BlazorTemplate.API -c Release 
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -P ${{ secrets.SERVERPORT }} -r ${{ github.workspace }}/BlazorTemplate.API/bin/Release/net9.0/publish/* ${{ secrets.SERVERUSERNAME }}@${{ secrets.SERVERADDRESS }}:/var/www/BlazorWasmAndApiTemplate      
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p ${{ secrets.SERVERPORT }} ${{ secrets.SERVERUSERNAME }}@${{ secrets.SERVERADDRESS }} "sudo systemctl restart kestrel-BlazorTemplate.service"
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p ${{ secrets.SERVERPORT }} ${{ secrets.SERVERUSERNAME }}@${{ secrets.SERVERADDRESS }} "sudo systemctl restart kestrel-BlazorWasmAndApiTemplate.service"
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p ${{ secrets.SERVERPORT }} ${{ secrets.SERVERUSERNAME }}@${{ secrets.SERVERADDRESS }} "sudo systemctl restart nginx"
