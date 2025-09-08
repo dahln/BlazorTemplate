@@ -95,6 +95,14 @@ Sensative configuration data, such as the DB connection strings, are kept in the
  git update-index --no-assume-unchanged .\BlazorTemplate.API\appsettings.json
  ```
 
+## Only want an API
+If you don't want to use the UI/App, do these three steps:
+1. Delete the BlazorTemplate.App project (Make sure references to it in csproj and sln files are updated)
+2. In BlazorTemplate.API program.cs, remove the "app.MapStaticAssets();" line
+3. In BlazorTemplate.API program.cs, remove the "app.MapFallbackToFile("index.html");" line
+
+In startup it still just "start" - It will probably start a new tab. Just navigate to /swagger to use the API directly.
+
 
 ## Licensing
 This project uses the 'Unlicense'.  It is a simple license - review it at your own leisure.
