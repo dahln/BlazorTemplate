@@ -20,12 +20,26 @@ public class AccountService
 
     public async Task<int> UserCount()
     {
+        var users = await _db.Users.ToListAsync();
+
         return await _db.Users.CountAsync();
     }
 
     public async Task<Dto.SystemSettings> GetSystemSettings()
     {
         var settings = await _db.SystemSettings.FirstOrDefaultAsync();
+        if (settings == null)
+        {
+            settings = new Database.SystemSetting()
+            {
+                SendGridKey = null,
+                SendGridSystemEmailAddress = null,
+                RegistrationEnabled = true,
+                EmailDomainRestriction = null
+            };
+            _db.SystemSettings.Add(settings);
+            await _db.SaveChangesAsync();
+        }
 
         var response = new Dto.SystemSettings()
         {
@@ -41,6 +55,18 @@ public class AccountService
     public async Task UpdateSystemSettings(Dto.SystemSettings model)
     {
         var settings = await _db.SystemSettings.FirstOrDefaultAsync();
+        if (settings == null)
+        {
+            settings = new Database.SystemSetting()
+            {
+                SendGridKey = null,
+                SendGridSystemEmailAddress = null,
+                RegistrationEnabled = true,
+                EmailDomainRestriction = null
+            };
+            _db.SystemSettings.Add(settings);
+            await _db.SaveChangesAsync();
+        }
         
         settings.SendGridKey = model.SendGridKey.Trim() == "--- NOT DISPLAYED FOR SECURITY ---" ? settings.SendGridKey : model.SendGridKey;
         settings.SendGridSystemEmailAddress = model.SendGridSystemEmailAddress;
