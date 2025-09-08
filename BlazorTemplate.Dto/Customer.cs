@@ -14,7 +14,7 @@ namespace BlazorTemplate.Dto
         public DateTime? BirthDate { get; set; }
         public string? Notes { get; set; }
 
-        public Gender? Gender { get; set; }
+        public Gender? Gender { get; set; } = Dto.Gender.NotSpecified;
         public bool? Active { get; set; }
 
         public string? ImageBase64 { get; set; }

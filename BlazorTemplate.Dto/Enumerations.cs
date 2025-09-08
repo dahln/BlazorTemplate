@@ -19,6 +19,11 @@ namespace BlazorTemplate.Dto
     {
         public static string GetDescription(this Enum GenericEnum)
         {
+            if(GenericEnum == null)
+            {
+                return string.Empty;
+            }
+
             Type genericEnumType = GenericEnum.GetType();
             MemberInfo[] memberInfo = genericEnumType.GetMember(GenericEnum.ToString());
             if ((memberInfo != null && memberInfo.Length > 0))
