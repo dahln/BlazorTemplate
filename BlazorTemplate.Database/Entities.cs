@@ -34,8 +34,8 @@ namespace BlazorTemplate.Database
     public class SystemSetting
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
-        public string? SendGridKey { get; set; }
-        public string? SendGridSystemEmailAddress { get; set; }
+        public string? EmailApiKey { get; set; }
+        public string? SystemEmailAddress { get; set; }
         public bool RegistrationEnabled { get; set; } = true;
         public string? EmailDomainRestriction { get; set; }
     }

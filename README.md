@@ -39,12 +39,12 @@ Getting started with this project is easy.
 ## Misc Details    
 1. This project has no required outside dependencies to get started. The database is a SQLite DB, and the database will be created automatically when you startup the project the first time. You simply need to clone the repo, then run the API project by calling 'dotnet watch' from the API project folder.
 2. Authentication is handled by ASP Identity, and is stored in your own DB.
-3. On optional (but recommended) dependency is SendGrid. This template uses SendGrid to send emails. The template does not require SendGrid in order to work, however some features are not available until you add a SendGrid API key and system email address to the AppSettings.json. Features you cannot use without SendGrid include:
+3. On optional (but recommended) dependency is SMTP2GO. This template uses SMTP2GO to send emails. The template does not require SMTP2GO in order to work, however some features are not available until you add a SMTP2GO API key and system email address admin settings. Features you cannot use without SMTP2GO include:
    - Account Activation and Email Confirmation
    - Account/Password recovery
    - Allowing a user to change their email/username.
 4. This application demonstrates simple CRUD operations. You can create data in the UI, or you can use the API and the 'seed' method to create a large quantity of seed data to expirament with.
-5. This template has some basic admin features. The first user to register will automatically be given the administrator role. Administrative abilities include: enable/disable registration, setting the SendGrid email  API values, and listing/deleting registered users.
+5. This template has some basic admin features. The first user to register will automatically be given the administrator role. Administrative abilities include: enable/disable registration, setting the SMTP2GO system email, API values, and listing/deleting registered users.
 
 ## Project Architecture
 This application now has 5 projects in the solution:
@@ -64,8 +64,8 @@ There are tools to handle API versioning. Add which ever tools you prefer. This 
 2. It is easy to customize and supported by Microsoft.
 3. It allows for 100% control of your user data and authentication/authorization process. There are other Authentication options such as Azure B2C/Entra and Auth0.
 
-## [SendGrid](https://sendgrid.com/en-us/pricing)
-This project uses SendGrid to send emails. A SendGrid API key is required. The demo has a key configured, but that value/key is not checked into the Repo. You will need to specify your own SendGrid API key and system email address. Some features that require email are not available until you provide the necessary SendGrid values. It is a simple process to create your own SendGrid account and retreive your API key.
+## [SMTP2GO](https://www.smtp2go.com/)
+This project uses SMTP2GO to send emails. A SMTP2GO API key is required. The live-demo has a key configured, but that value/key is not checked into the Repo. You will need to specify your own SMTP2GO API key and system email address. Some features that require email are not available until you provide the necessary SMTP2GO values. It is a simple process to create your own SMTP2GO account and retreive your API key.
 
 ## Why SQLite?
 It runs on Windows and Linux. It is great for this template. Depending on your projects needs, it may work for production. If you need more than SQLite offers then I recommend switching to Azure SQL. If you switch to Azure SQL, besure to delete your SQLite DB migrations and create new a 'Initial Migration' for your new Azure SQL DB.

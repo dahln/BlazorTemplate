@@ -32,8 +32,8 @@ public class AccountService
         {
             settings = new Database.SystemSetting()
             {
-                SendGridKey = null,
-                SendGridSystemEmailAddress = null,
+                EmailApiKey = null,
+                SystemEmailAddress = null,
                 RegistrationEnabled = true,
                 EmailDomainRestriction = null
             };
@@ -43,8 +43,8 @@ public class AccountService
 
         var response = new Dto.SystemSettings()
         {
-            SendGridKey = "--- NOT DISPLAYED FOR SECURITY ---",
-            SendGridSystemEmailAddress = settings.SendGridSystemEmailAddress,
+            EmailApiKey = "--- NOT DISPLAYED FOR SECURITY ---",
+            SystemEmailAddress = settings.SystemEmailAddress,
             RegistrationEnabled = settings.RegistrationEnabled,
             EmailDomainRestriction = settings.EmailDomainRestriction
         };
@@ -59,17 +59,17 @@ public class AccountService
         {
             settings = new Database.SystemSetting()
             {
-                SendGridKey = null,
-                SendGridSystemEmailAddress = null,
-                RegistrationEnabled = true,
-                EmailDomainRestriction = null
+                EmailApiKey = model.EmailApiKey,
+                SystemEmailAddress = model.SystemEmailAddress,
+                RegistrationEnabled = model.RegistrationEnabled,
+                EmailDomainRestriction = model.EmailDomainRestriction
             };
             _db.SystemSettings.Add(settings);
             await _db.SaveChangesAsync();
         }
         
-        settings.SendGridKey = model.SendGridKey.Trim() == "--- NOT DISPLAYED FOR SECURITY ---" ? settings.SendGridKey : model.SendGridKey;
-        settings.SendGridSystemEmailAddress = model.SendGridSystemEmailAddress;
+        settings.EmailApiKey = model.EmailApiKey.Trim() == "--- NOT DISPLAYED FOR SECURITY ---" ? settings.EmailApiKey : model.EmailApiKey;
+        settings.SystemEmailAddress = model.SystemEmailAddress;
         settings.RegistrationEnabled = model.RegistrationEnabled;
         settings.EmailDomainRestriction = model.EmailDomainRestriction;
         
@@ -138,12 +138,12 @@ public class AccountService
         if (settings == null)
             return false;
 
-        var sendGridApi = settings.SendGridKey;
-        var sendGridSystemEmailAddress = settings.SendGridSystemEmailAddress;
+        var emailApi = settings.EmailApiKey;
+        var systemEmailAddress = settings.SystemEmailAddress;
 
         var allowAllOperations = false;
 
-        if (!string.IsNullOrEmpty(sendGridApi) && !string.IsNullOrEmpty(sendGridSystemEmailAddress))
+        if (!string.IsNullOrEmpty(emailApi) && !string.IsNullOrEmpty(systemEmailAddress))
             allowAllOperations = true;
 
         return allowAllOperations;

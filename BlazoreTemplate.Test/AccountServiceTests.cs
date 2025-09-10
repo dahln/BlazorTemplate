@@ -72,7 +72,8 @@ public class AccountServiceTests
         
         var settings = await service.GetSystemSettings();
         Assert.NotNull(settings);
-        Assert.Null(settings.SendGridSystemEmailAddress);
+        Assert.Null(settings.SystemEmailAddress);
+        Assert.Equal("--- NOT DISPLAYED FOR SECURITY ---", settings.EmailApiKey);
     }
 
     [Fact]
